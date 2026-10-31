@@ -1,0 +1,26 @@
+
+# Java y Spring Boot
+target/
+*.class
+*.jar
+*.war
+
+# Archivos de configuracion privados
+.env
+.env.*
+!.env.example
+
+# Visual Studio Code
+.vscode/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Archivos temporales
+*.log
+*.tmp
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
