@@ -31,8 +31,10 @@ public class SecurityConfig {
                     "/api/auth/registro",
                     "/api/auth/login"
                 ).permitAll()
-                .requestMatchers("/api/auth/perfil")
-                .authenticated()
+                .requestMatchers(
+    "/api/auth/perfil",
+    "/api/auth/validar"
+).authenticated()
                 .anyRequest().authenticated()
             )
             .httpBasic(basic -> basic.disable())
