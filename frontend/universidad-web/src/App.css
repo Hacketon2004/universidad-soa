@@ -1,0 +1,407 @@
+.pantalla-login {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 55px 20px;
+  background:
+    radial-gradient(ellipse at 16% 30%, #234b84 0%, transparent 46%),
+    radial-gradient(ellipse at 92% 75%, #123b83 0%, transparent 45%),
+    linear-gradient(115deg, #071a37, #092453 55%, #071d43);
+}
+
+/* Iluminación ambiental */
+
+.resplandor {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(75px);
+  opacity: 0.4;
+}
+
+.resplandor-uno {
+  width: 520px;
+  height: 520px;
+  background: #2367d3;
+  left: -280px;
+  top: -170px;
+}
+
+.resplandor-dos {
+  width: 550px;
+  height: 550px;
+  background: #0348ba;
+  right: -320px;
+  bottom: -260px;
+}
+
+/* Ondas decorativas */
+
+.onda {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  width: 800px;
+  height: 300px;
+  border: 5px solid #1379f9;
+  background: linear-gradient(135deg, #075bd6, #063379);
+  box-shadow: 0 0 25px rgba(0, 119, 255, 0.35);
+}
+
+.onda-superior {
+  top: -235px;
+  right: -200px;
+  border-radius: 0 0 45% 65%;
+  transform: rotate(18deg);
+}
+
+.onda-inferior {
+  bottom: -255px;
+  left: -220px;
+  border-radius: 65% 45% 0 0;
+  transform: rotate(17deg);
+}
+
+/* Escenario universitario del fondo */
+
+.escenario-universidad {
+  position: absolute;
+  z-index: 0;
+  left: -25px;
+  bottom: 10%;
+  width: 48%;
+  height: 65%;
+  opacity: 0.28;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 25px #031025);
+}
+
+.edificio {
+  position: absolute;
+  bottom: 8%;
+  left: 4%;
+  width: 85%;
+  height: 75%;
+  background: linear-gradient(115deg, #597da9, #1b477d);
+  border: 2px solid #7897bd;
+  clip-path: polygon(0 12%, 45% 0, 100% 14%, 100% 100%, 0 100%);
+}
+
+.edificio-superior {
+  position: absolute;
+  top: 12%;
+  width: 100%;
+  height: 13%;
+  background: #16355c;
+  border-bottom: 5px solid #7b9ec5;
+}
+
+.edificio-nombre {
+  position: absolute;
+  top: 29%;
+  left: 8%;
+  font-size: clamp(13px, 2vw, 28px);
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #c1d8f5;
+}
+
+.edificio-ventanas {
+  position: absolute;
+  top: 43%;
+  left: 8%;
+  right: 8%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.edificio-ventanas span {
+  height: 55px;
+  background: linear-gradient(#0b2549, #285b8b);
+  border: 2px solid #88a9cc;
+}
+
+.edificio-entrada {
+  position: absolute;
+  bottom: 0;
+  left: 34%;
+  width: 32%;
+  height: 27%;
+  background: #071a35;
+  border: 5px solid #8aa8c9;
+  border-bottom: none;
+}
+
+.suelo {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 12%;
+  background: linear-gradient(#355a86, transparent);
+  transform: skewY(-5deg);
+}
+
+/* Tarjeta central */
+
+.tarjeta-login {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 540px;
+  padding: 32px 46px 30px;
+  border: 1.5px solid #1685ed;
+  border-radius: 29px;
+  background: linear-gradient(
+    155deg,
+    rgba(11, 39, 80, 0.96),
+    rgba(5, 26, 61, 0.97)
+  );
+  box-shadow:
+    0 0 0 1px rgba(58, 150, 255, 0.12),
+    0 0 45px rgba(0, 111, 255, 0.16),
+    0 28px 80px rgba(0, 7, 25, 0.48);
+  backdrop-filter: blur(15px);
+}
+
+.cabecera-login {
+  text-align: center;
+}
+
+.logo-universidad {
+  width: 82px;
+  height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  border-radius: 19px;
+  color: white;
+  background: linear-gradient(145deg, #078dff, #0342bb);
+  border: 1px solid #399dff;
+  box-shadow: 0 8px 28px rgba(0, 119, 255, 0.35);
+}
+
+.cabecera-login h1 {
+  margin: 0 auto 12px;
+  max-width: 440px;
+  color: #f5f8ff;
+  font-size: clamp(23px, 3vw, 29px);
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.cabecera-login p {
+  margin: 0;
+  font-size: 15px;
+  color: #b5c9e6;
+}
+
+.linea-decorativa {
+  width: 90px;
+  height: 4px;
+  margin: 23px auto 27px;
+  border-radius: 5px;
+  background: #1688ff;
+  box-shadow: 0 0 15px rgba(0, 137, 255, 0.5);
+}
+
+/* Formulario */
+
+.titulo-formulario {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 21px;
+  color: #218fff;
+}
+
+.titulo-formulario h2 {
+  margin: 0;
+  color: #f0f6ff;
+  font-size: 21px;
+}
+
+.grupo-formulario {
+  margin-bottom: 20px;
+}
+
+.grupo-formulario label {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 14px;
+  font-weight: 650;
+  color: #e4edfb;
+}
+
+.campo-login {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 53px;
+  padding: 0 15px;
+  border: 1.5px solid #4a6b96;
+  border-radius: 11px;
+  color: #c1d5f1;
+  background: rgba(43, 70, 108, 0.55);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.campo-login:focus-within {
+  border-color: #3e9dff;
+  box-shadow: 0 0 0 3px rgba(30, 139, 255, 0.15);
+}
+
+.campo-login input {
+  flex: 1;
+  min-width: 0;
+  height: 50px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 15px;
+}
+
+.campo-login input::placeholder {
+  color: #aebfda;
+}
+
+.boton-ojo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border: none;
+  background: transparent;
+  color: #c3d7f2;
+}
+
+.boton-ojo:hover {
+  color: #fff;
+}
+
+/* Botón principal */
+
+.boton-ingresar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  width: 100%;
+  min-height: 55px;
+  margin-top: 25px;
+  padding: 12px;
+  border: 1.5px solid #51b7ff;
+  border-radius: 12px;
+  background: linear-gradient(105deg, #008bff, #0753dc);
+  box-shadow:
+    inset 0 1px 6px rgba(255, 255, 255, 0.25),
+    0 0 20px rgba(0, 105, 255, 0.25);
+  color: #fff;
+  font-weight: 750;
+  font-size: 16px;
+  transition:
+    filter 0.2s,
+    transform 0.2s;
+}
+
+.boton-ingresar:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+}
+
+.boton-ingresar:disabled {
+  opacity: 0.7;
+  cursor: wait;
+  transform: none;
+}
+
+.mensaje-error {
+  padding: 11px 13px;
+  border: 1px solid #b65c71;
+  border-radius: 9px;
+  background: #56283b;
+  color: #ffd2dc;
+  font-size: 14px;
+}
+
+/* Pie de la tarjeta */
+
+.pie-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 31px;
+  color: #a9bedb;
+  font-size: 13px;
+}
+
+.marca-inferior {
+  position: absolute;
+  z-index: 2;
+  bottom: 15px;
+  color: #91abd0;
+  font-size: 11px;
+  text-align: center;
+}
+
+/* Pantalla provisional tras autenticarse */
+
+.contenido-bienvenida {
+  text-align: center;
+}
+
+.icono-bienvenida {
+  color: #59b4ff;
+  margin-bottom: 13px;
+}
+
+.contenido-bienvenida h2 {
+  margin-bottom: 12px;
+}
+
+.contenido-bienvenida p {
+  color: #d0def1;
+}
+
+.detalle-sesion {
+  font-size: 13px;
+}
+
+/* Adaptación a móviles */
+
+@media (max-width: 600px) {
+  .pantalla-login {
+    padding: 35px 15px 55px;
+  }
+
+  .tarjeta-login {
+    padding: 30px 23px;
+    border-radius: 22px;
+  }
+
+  .escenario-universidad {
+    width: 95%;
+    opacity: 0.13;
+  }
+
+  .onda {
+    width: 450px;
+  }
+
+  .cabecera-login h1 {
+    font-size: 23px;
+  }
+
+  .marca-inferior {
+    width: 90%;
+  }
+}

@@ -15,6 +15,8 @@ public class Usuario {
     private String password;
     private String rol;
 
+    private Boolean activo = true;
+
     public Usuario() {
     }
 
@@ -65,4 +67,13 @@ public class Usuario {
     public void setRol(String rol) {
         this.rol = rol;
     }
+
+    public boolean isActivo() {
+    return !Boolean.FALSE.equals(activo);
+}
+
+public void setActivo(Boolean activo) {
+    this.activo = activo;
+}
+
 }

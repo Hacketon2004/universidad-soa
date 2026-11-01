@@ -9,6 +9,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.universidad.servicio_autenticacion.model.Usuario;
+import com.universidad.servicio_autenticacion.repository.UsuarioRepository;
 import com.universidad.servicio_autenticacion.service.JwtService;
 
 import io.jsonwebtoken.Claims;
@@ -20,9 +22,13 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final UsuarioRepository usuarioRepository;
 
-    public JwtAuthenticationFilter(JwtService jwtService) {
+    public JwtAuthenticationFilter(
+            JwtService jwtService,
+            UsuarioRepository usuarioRepository) {
         this.jwtService = jwtService;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Override
@@ -31,6 +37,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain)
             throws ServletException, IOException {
+
+        SecurityContextHolder.clearContext();
 
         String authorization = request.getHeader("Authorization");
 
@@ -43,24 +51,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Claims claims = jwtService.validarToken(token);
 
                 String usuarioId = claims.getSubject();
-                String rol = claims.get("rol", String.class);
 
-                if (usuarioId != null && !usuarioId.isBlank()
-                        && rol != null && !rol.isBlank()) {
+                if (usuarioId != null && !usuarioId.isBlank()) {
 
-                    var authorities = List.of(
-                        new SimpleGrantedAuthority("ROLE_" + rol)
-                    );
+                    Usuario usuario = usuarioRepository
+                        .findById(usuarioId)
+                        .orElse(null);
 
-                    var authentication =
-                        new UsernamePasswordAuthenticationToken(
-                            usuarioId,
-                            null,
-                            authorities
+                    if (usuario != null
+                            && usuario.isActivo()
+                            && usuario.getRol() != null
+                            && !usuario.getRol().isBlank()) {
+
+                        var authorities = List.of(
+                            new SimpleGrantedAuthority(
+                                "ROLE_" + usuario.getRol()
+                            )
                         );
 
-                    SecurityContextHolder.getContext()
-                        .setAuthentication(authentication);
+                        var authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                usuario.getId(),
+                                null,
+                                authorities
+                            );
+
+                        SecurityContextHolder.getContext()
+                            .setAuthentication(authentication);
+                    }
                 }
 
             } catch (Exception ex) {

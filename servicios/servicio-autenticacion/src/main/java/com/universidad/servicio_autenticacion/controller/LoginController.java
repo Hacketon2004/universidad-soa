@@ -67,9 +67,16 @@ public class LoginController {
                 ));
         }
 
-        Usuario encontrado = usuario.get();
+Usuario encontrado = usuario.get();
 
-        String token = jwtService.generarToken(encontrado);
+if (!encontrado.isActivo()) {
+    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+        .body(Map.of(
+            "mensaje", "Esta cuenta se encuentra desactivada"
+        ));
+}
+
+String token = jwtService.generarToken(encontrado);
 
         return ResponseEntity.ok(Map.of(
             "mensaje", "Inicio de sesion correcto",
