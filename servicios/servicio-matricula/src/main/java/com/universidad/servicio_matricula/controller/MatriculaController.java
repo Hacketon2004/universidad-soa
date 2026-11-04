@@ -19,7 +19,7 @@ import com.universidad.servicio_matricula.service.MatriculaService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/matriculas")
+@RequestMapping("/api/matriculas")
 public class MatriculaController {
 
     private final MatriculaService matriculaService;
