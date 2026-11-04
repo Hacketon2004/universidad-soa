@@ -34,7 +34,8 @@ public SecurityFilterChain securityFilterChain(
     .requestMatchers(
         "/api/auth/estado",
         "/api/auth/registro",
-        "/api/auth/login"
+        "/api/auth/login",
+        "/error"
     ).permitAll()
 
 .requestMatchers("/api/usuarios", "/api/usuarios/**")
