@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 import GestionUsuarios from "./GestionUsuarios";
-
+import GestionEstudiantes from "./GestionEstudiantes";
 import "./Dashboard.css";
 
 const modulos = [
@@ -33,7 +33,7 @@ const modulos = [
     nombre: "Estudiantes",
     descripcion: "Información y registros estudiantiles.",
     icono: Users,
-    disponible: false,
+    disponible: true,
     roles: ["ADMINISTRADOR", "SECRETARIA"],
   },
   {
@@ -224,9 +224,11 @@ function Dashboard({ sesion, onCerrarSesion }) {
                 })}
               </div>
             </>
-          ) : seccion === "usuarios" && rol === "ADMINISTRADOR" ? (
-            <GestionUsuarios token={sesion.token} />
-          ) : (
+           ) : seccion === "usuarios" && rol === "ADMINISTRADOR" ? (
+           <GestionUsuarios token={sesion.token} />
+           ) : seccion === "estudiantes" ? (
+           <GestionEstudiantes token={sesion.token} />
+           ) : (
             <div className="modulo-detalle">
               <button
                 className="volver-panel"

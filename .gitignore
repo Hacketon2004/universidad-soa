@@ -24,3 +24,5 @@ target/
 # Sistema operativo
 .DS_Store
 Thumbs.db
+# Dependencias de Node.js
+node_modules/

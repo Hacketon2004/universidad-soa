@@ -12,7 +12,7 @@ export async function iniciarSesion(correo, password) {
   const datos = await respuesta.json();
 
   if (!respuesta.ok) {
-    throw new Error(datos.mensaje || "Correo o contraseña incorrectos");
+    throw new Error(datos.mensaje || "Correo o contraseÃ±a incorrectos");
   }
 
   return datos;
@@ -52,7 +52,7 @@ async function solicitudAdministrativa(ruta, metodo, token, datos) {
   if (!respuesta.ok) {
     throw new Error(
       resultado.mensaje ||
-        `No se pudo completar la operación (${respuesta.status})`,
+        `No se pudo completar la operaciÃ³n (${respuesta.status})`,
     );
   }
 
@@ -87,5 +87,51 @@ export function restablecerPasswordUsuario(token, id, nuevaPassword) {
     "PATCH",
     token,
     { nuevaPassword },
+  );
+}
+
+// ===============================
+// GESTIÃ“N DE ESTUDIANTES
+// ===============================
+
+async function solicitudEstudiantes(ruta, metodo, token, datos) {
+  const respuesta = await fetch(`/api/estudiantes${ruta}`, {
+    method: metodo,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      ...(datos ? { "Content-Type": "application/json" } : {}),
+    },
+    ...(datos ? { body: JSON.stringify(datos) } : {}),
+  });
+
+  const resultado = await respuesta.json().catch(() => ({}));
+
+  if (!respuesta.ok) {
+    throw new Error(
+      resultado.mensaje || `Error en estudiantes: ${respuesta.status}`
+    );
+  }
+
+  return resultado;
+}
+
+export function obtenerEstudiantes(token) {
+  return solicitudEstudiantes("", "GET", token);
+}
+
+export function crearEstudiante(token, datos) {
+  return solicitudEstudiantes("", "POST", token, datos);
+}
+
+export function editarEstudiante(token, id, datos) {
+  return solicitudEstudiantes(`/${encodeURIComponent(id)}`, "PUT", token, datos);
+}
+
+export function cambiarEstadoEstudiante(token, id, activo) {
+  return solicitudEstudiantes(
+    `/${encodeURIComponent(id)}/estado`,
+    "PATCH",
+    token,
+    { activo }
   );
 }
