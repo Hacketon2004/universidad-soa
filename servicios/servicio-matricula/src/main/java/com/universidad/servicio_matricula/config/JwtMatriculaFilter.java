@@ -20,8 +20,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtMatriculaFilter extends OncePerRequestFilter {
 
-    private final RestClient restClient =
-            RestClient.create("http://localhost:8081");
+    private final RestClient restClient;
+
+    public JwtMatriculaFilter(String authUrl) {
+        this.restClient = RestClient.create(authUrl);
+    }
 
     @Override
     protected void doFilterInternal(
