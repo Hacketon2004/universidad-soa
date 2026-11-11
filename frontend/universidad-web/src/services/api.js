@@ -89,3 +89,53 @@ export function restablecerPasswordUsuario(token, id, nuevaPassword) {
     { nuevaPassword },
   );
 }
+
+// ===================== MATRÍCULAS =====================
+
+async function solicitudMatricula(ruta, metodo, token, datos) {
+  const respuesta = await fetch(`${API_URL}/matriculas${ruta}`, {
+    method: metodo,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      ...(datos ? { "Content-Type": "application/json" } : {}),
+    },
+    ...(datos ? { body: JSON.stringify(datos) } : {}),
+  });
+
+  const resultado = await respuesta.json().catch(() => ({}));
+
+  if (!respuesta.ok) {
+    if (respuesta.status === 401) {
+      throw new Error("Tu sesión expiró. Vuelve a iniciar sesión.");
+    }
+    if (respuesta.status === 403) {
+      throw new Error("No tienes permisos para gestionar matrículas");
+    }
+    throw new Error(
+      resultado.mensaje ||
+        `No se pudo completar la operación (${respuesta.status})`,
+    );
+  }
+
+  return resultado;
+}
+
+export function obtenerMatriculasPorEstudiante(token, estudianteId) {
+  return solicitudMatricula(
+    `/estudiante/${encodeURIComponent(estudianteId)}`,
+    "GET",
+    token,
+  );
+}
+
+export function registrarMatricula(token, datos) {
+  return solicitudMatricula("", "POST", token, datos);
+}
+
+export function anularMatricula(token, id) {
+  return solicitudMatricula(
+    `/${encodeURIComponent(id)}/anular`,
+    "PUT",
+    token,
+  );
+}
