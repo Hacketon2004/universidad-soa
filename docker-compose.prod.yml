@@ -1,0 +1,69 @@
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: universidad_matriculas
+      MYSQL_USER: svc_matriculas
+      MYSQL_PASSWORD: ${DB_MATRICULA_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+
+  servicio-autenticacion:
+    build: ./servicios/servicio-autenticacion
+    restart: unless-stopped
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/universidad_auth
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_INICIAL_HABILITADO: "true"
+      ADMIN_INICIAL_CORREO: ${ADMIN_INICIAL_CORREO}
+      ADMIN_INICIAL_PASSWORD: ${ADMIN_INICIAL_PASSWORD}
+      JAVA_TOOL_OPTIONS: -Xmx384m
+    depends_on:
+      - mongo
+
+  servicio-matricula:
+    build: ./servicios/servicio-matricula
+    restart: unless-stopped
+    environment:
+      SERVER_ADDRESS: 0.0.0.0
+      DB_URL: jdbc:mysql://mysql:3306/universidad_matriculas
+      DB_USERNAME: svc_matriculas
+      DB_PASSWORD: ${DB_MATRICULA_PASSWORD}
+      AUTH_URL: http://servicio-autenticacion:8081
+      JAVA_TOOL_OPTIONS: -Xmx384m
+    depends_on:
+      mysql:
+        condition: service_healthy
+      servicio-autenticacion:
+        condition: service_started
+
+  api-gateway:
+    build: ./infra/api-gateway
+    restart: unless-stopped
+    ports:
+      - "80:8080"
+    environment:
+      AUTH_URL: http://servicio-autenticacion:8081
+      MATRICULA_URL: http://servicio-matricula:8085
+      CURSO_URL: http://servicio-curso:8083
+      JAVA_TOOL_OPTIONS: -Xmx256m
+    depends_on:
+      - servicio-autenticacion
+      - servicio-matricula
+
+volumes:
+  mysql_data:
+  mongo_data:
