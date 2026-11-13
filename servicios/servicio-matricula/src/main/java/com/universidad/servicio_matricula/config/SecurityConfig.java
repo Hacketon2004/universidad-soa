@@ -1,6 +1,7 @@
 
 package com.universidad.servicio_matricula.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,8 +15,9 @@ import org.springframework.security.web.context.SecurityContextHolderFilter;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)
-            throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            @Value("${auth.url}") String authUrl) throws Exception {
 
         return http
             .csrf(AbstractHttpConfigurer::disable)
@@ -43,7 +45,7 @@ public class SecurityConfig {
                 .anyRequest().denyAll()
             )
             .addFilterAfter(
-                new JwtMatriculaFilter(),
+                new JwtMatriculaFilter(authUrl),
                 SecurityContextHolderFilter.class
             )
             .build();

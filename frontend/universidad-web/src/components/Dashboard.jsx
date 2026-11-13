@@ -17,6 +17,7 @@ import {
 
 import GestionUsuarios from "./GestionUsuarios";
 import GestionEstudiantes from "./GestionEstudiantes";
+import GestionMatriculas from "./GestionMatriculas";
 import "./Dashboard.css";
 
 const modulos = [
@@ -57,7 +58,7 @@ const modulos = [
     nombre: "Matrículas",
     descripcion: "Inscripciones y seguimiento académico.",
     icono: ClipboardList,
-    disponible: false,
+    disponible: true,
     roles: ["ADMINISTRADOR", "SECRETARIA", "ESTUDIANTE"],
   },
 ];
@@ -209,7 +210,9 @@ function Dashboard({ sesion, onCerrarSesion }) {
                         <div className="modulo-icono">
                           <Icono size={25} />
                         </div>
-                        <span className="modulo-pendiente">En desarrollo</span>
+                        {!modulo.disponible && (
+                          <span className="modulo-pendiente">En desarrollo</span>
+                        )}
                       </div>
 
                       <h3>{modulo.nombre}</h3>
@@ -225,11 +228,13 @@ function Dashboard({ sesion, onCerrarSesion }) {
               </div>
             </>
            ) : seccion === "usuarios" && rol === "ADMINISTRADOR" ? (
-           <GestionUsuarios token={sesion.token} />
-           ) : seccion === "estudiantes" ? (
-           <GestionEstudiantes token={sesion.token} />
-           ) : (
-            <div className="modulo-detalle">
+            <GestionUsuarios token={sesion.token} />
+          ) : seccion === "estudiantes" ? (
+  <GestionEstudiantes token={sesion.token} />
+          ) : seccion === "matriculas" && rol === "ADMINISTRADOR" ? (
+  <GestionMatriculas token={sesion.token} />
+          ) : (
+           <div className="modulo-detalle">
               <button
                 className="volver-panel"
                 onClick={() => navegar("inicio")}

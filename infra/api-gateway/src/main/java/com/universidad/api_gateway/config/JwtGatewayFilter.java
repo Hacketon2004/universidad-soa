@@ -2,12 +2,13 @@ package com.universidad.api_gateway.config;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,9 +18,11 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JwtGatewayFilter extends OncePerRequestFilter {
 
-    private final RestClient restClient = RestClient.create(
-            "http://localhost:8081"
-    );
+    private final RestClient restClient;
+
+    public JwtGatewayFilter(@Value("${auth.url}") String authUrl) {
+        this.restClient = RestClient.create(authUrl);
+    }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
@@ -37,17 +40,10 @@ public class JwtGatewayFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String authorization = request.getHeader(
-                HttpHeaders.AUTHORIZATION
-        );
+        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (authorization == null
-                || !authorization.startsWith("Bearer ")) {
-
-            response.sendError(
-                    HttpStatus.UNAUTHORIZED.value(),
-                    "Token JWT obligatorio"
-            );
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "Token JWT obligatorio");
             return;
         }
 
@@ -58,19 +54,15 @@ public class JwtGatewayFilter extends OncePerRequestFilter {
                     .retrieve()
                     .toBodilessEntity();
 
-            filterChain.doFilter(request, response);
-
         } catch (RestClientResponseException ex) {
-            response.sendError(
-                    HttpStatus.UNAUTHORIZED.value(),
-                    "Token JWT invalido o expirado"
-            );
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "Token JWT invalido o expirado");
+            return;
 
         } catch (Exception ex) {
-            response.sendError(
-                    HttpStatus.BAD_GATEWAY.value(),
-                    "No se pudo verificar el token"
-            );
+            response.sendError(HttpStatus.BAD_GATEWAY.value(), "No se pudo verificar el token");
+            return;
         }
+
+        filterChain.doFilter(request, response);
     }
 }
