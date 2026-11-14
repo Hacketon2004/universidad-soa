@@ -43,6 +43,11 @@ services:
       DB_USERNAME: svc_matriculas
       DB_PASSWORD: ${DB_MATRICULA_PASSWORD}
       AUTH_URL: http://servicio-autenticacion:8081
+      ESTUDIANTE_URL: http://servicio-estudiante:8082
+      CURSO_URL: http://servicio-curso:8083
+      # Cambiar a "true" cuando estudiantes y cursos esten desplegados en el servidor
+      INTEGRACION_ESTUDIANTES: "false"
+      INTEGRACION_CURSOS: "false"
       JAVA_TOOL_OPTIONS: -Xmx384m
     depends_on:
       mysql:
