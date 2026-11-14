@@ -229,7 +229,7 @@ function Dashboard({ sesion, onCerrarSesion }) {
             </>
           ) : seccion === "usuarios" && rol === "ADMINISTRADOR" ? (
             <GestionUsuarios token={sesion.token} />
-          ) : seccion === "matriculas" && rol === "ADMINISTRADOR" ? (
+          ) : seccion === "matriculas" && ["ADMINISTRADOR", "SECRETARIA"].includes(rol) ? (
             <GestionMatriculas token={sesion.token} />
           ) : (
             <div className="modulo-detalle">
