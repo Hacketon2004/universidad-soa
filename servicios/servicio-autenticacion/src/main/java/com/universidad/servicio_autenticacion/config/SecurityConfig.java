@@ -32,11 +32,14 @@ public SecurityFilterChain securityFilterChain(
             
 .authorizeHttpRequests(auth -> auth
     .requestMatchers(
-        "/api/auth/estado",
-        "/api/auth/registro",
-        "/api/auth/login",
-        "/error"
-    ).permitAll()
+    "/api/auth/estado",
+    "/api/auth/registro",
+    "/api/auth/login",
+    "/swagger-ui/**",
+    "/swagger-ui.html",
+    "/v3/api-docs/**",
+    "/error"
+).permitAll()
 
 .requestMatchers("/api/usuarios", "/api/usuarios/**")
     .hasRole("ADMINISTRADOR")
