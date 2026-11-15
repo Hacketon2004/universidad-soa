@@ -18,6 +18,7 @@ import {
 import GestionUsuarios from "./GestionUsuarios";
 import GestionEstudiantes from "./GestionEstudiantes";
 import GestionMatriculas from "./GestionMatriculas";
+import GestionCursos from "./GestionCursos";
 import "./Dashboard.css";
 
 const modulos = [
@@ -42,7 +43,7 @@ const modulos = [
     nombre: "Cursos",
     descripcion: "Oferta académica y asignaturas.",
     icono: BookOpen,
-    disponible: false,
+    disponible: true,
     roles: ["ADMINISTRADOR", "SECRETARIA", "DOCENTE", "ESTUDIANTE"],
   },
   {
@@ -233,6 +234,8 @@ function Dashboard({ sesion, onCerrarSesion }) {
             <GestionEstudiantes token={sesion.token} />
           ) : seccion === "matriculas" && ["ADMINISTRADOR", "SECRETARIA"].includes(rol) ? (
             <GestionMatriculas token={sesion.token} />
+          ) : seccion === "cursos" ? (
+            <GestionCursos token={sesion.token} rol={rol} />
           ) : (
           <div className="modulo-detalle">
               <button

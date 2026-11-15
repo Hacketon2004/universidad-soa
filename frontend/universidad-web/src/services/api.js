@@ -203,3 +203,79 @@ export function anularMatricula(token, id) {
     token
   );
 }
+
+// ===============================
+// GESTION DE CURSOS
+// ===============================
+
+async function solicitudCursos(ruta, metodo, token, datos) {
+  const respuesta = await fetch(`${API_URL}/cursos${ruta}`, {
+    method: metodo,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      ...(datos ? { "Content-Type": "application/json" } : {}),
+    },
+    ...(datos ? { body: JSON.stringify(datos) } : {}),
+  });
+
+  const resultado = await respuesta.json().catch(() => ({}));
+
+  if (!respuesta.ok) {
+    if (respuesta.status === 401) {
+      throw new Error("Tu sesion expiro. Vuelve a iniciar sesion.");
+    }
+
+    if (respuesta.status === 403) {
+      throw new Error("No tienes permisos para esta accion sobre cursos.");
+    }
+
+    throw new Error(
+      resultado.message ||
+        resultado.mensaje ||
+        `No se pudo completar la operacion (${respuesta.status})`
+    );
+  }
+
+  return resultado;
+}
+
+export function obtenerCursos(token) {
+  return solicitudCursos("", "GET", token);
+}
+
+export function obtenerCurso(token, id) {
+  return solicitudCursos(`/${encodeURIComponent(id)}`, "GET", token);
+}
+
+export function obtenerCursosPorCiclo(token, ciclo) {
+  return solicitudCursos(`/ciclo/${encodeURIComponent(ciclo)}`, "GET", token);
+}
+
+export function obtenerCursosPorDocente(token, docenteId) {
+  return solicitudCursos(`/docente/${encodeURIComponent(docenteId)}`, "GET", token);
+}
+
+export function consultarCursosDisponibles(token, datos) {
+  return solicitudCursos("/disponibles", "POST", token, datos);
+}
+
+export function crearCurso(token, datos) {
+  return solicitudCursos("", "POST", token, datos);
+}
+
+export function editarCurso(token, id, datos) {
+  return solicitudCursos(`/${encodeURIComponent(id)}`, "PUT", token, datos);
+}
+
+export function asignarDocenteCurso(token, id, datos) {
+  return solicitudCursos(`/${encodeURIComponent(id)}/docente`, "PUT", token, datos);
+}
+
+export function cancelarCurso(token, id, datos) {
+  return solicitudCursos(`/${encodeURIComponent(id)}/cancelar`, "POST", token, datos);
+}
+
+export function darDeBajaCurso(token, id) {
+  return solicitudCursos(`/${encodeURIComponent(id)}`, "DELETE", token);
+}
+

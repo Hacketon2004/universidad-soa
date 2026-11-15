@@ -25,6 +25,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // Sin esto, los 404/409 del servicio llegan como 403 (el reenvío a /error no lleva el token)
+                        .requestMatchers("/error").permitAll()
                         // 1. Consultas públicas/autenticadas para Estudiantes, Docentes y Admins
                         .requestMatchers(HttpMethod.GET, "/api/cursos/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/cursos/disponibles").authenticated()
