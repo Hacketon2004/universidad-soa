@@ -30,17 +30,17 @@ public class SecurityConfig {
                 .requestMatchers(
                     HttpMethod.POST,
                     "/api/matriculas"
-                ).hasAuthority("ROLE_ADMINISTRADOR")
+                ).hasAnyAuthority("ROLE_ADMINISTRADOR", "ROLE_SECRETARIA")
 
                 .requestMatchers(
                     HttpMethod.PUT,
                     "/api/matriculas/*/anular"
-                ).hasAuthority("ROLE_ADMINISTRADOR")
+                ).hasAnyAuthority("ROLE_ADMINISTRADOR", "ROLE_SECRETARIA")
 
                 .requestMatchers(
                     HttpMethod.GET,
                     "/api/matriculas/estudiante/*"
-                ).hasAuthority("ROLE_ADMINISTRADOR")
+                ).hasAnyAuthority("ROLE_ADMINISTRADOR", "ROLE_SECRETARIA")
 
                 .anyRequest().denyAll()
             )

@@ -227,14 +227,14 @@ function Dashboard({ sesion, onCerrarSesion }) {
                 })}
               </div>
             </>
-           ) : seccion === "usuarios" && rol === "ADMINISTRADOR" ? (
+          ) : seccion === "usuarios" && rol === "ADMINISTRADOR" ? (
             <GestionUsuarios token={sesion.token} />
           ) : seccion === "estudiantes" ? (
-  <GestionEstudiantes token={sesion.token} />
-          ) : seccion === "matriculas" && rol === "ADMINISTRADOR" ? (
-  <GestionMatriculas token={sesion.token} />
+            <GestionEstudiantes token={sesion.token} />
+          ) : seccion === "matriculas" && ["ADMINISTRADOR", "SECRETARIA"].includes(rol) ? (
+            <GestionMatriculas token={sesion.token} />
           ) : (
-           <div className="modulo-detalle">
+          <div className="modulo-detalle">
               <button
                 className="volver-panel"
                 onClick={() => navegar("inicio")}
