@@ -15,6 +15,20 @@ services:
       timeout: 5s
       retries: 12
 
+  # Crea las BD y usuarios de estudiantes y cursos (si no existen) y termina.
+  mysql-init:
+    image: mysql:8.4
+    restart: "no"
+    environment:
+      MYSQL_PWD: ${MYSQL_ROOT_PASSWORD}
+      DB_ESTUDIANTE_PASSWORD: ${DB_ESTUDIANTE_PASSWORD}
+      DB_CURSO_PASSWORD: ${DB_CURSO_PASSWORD}
+    volumes:
+      - ./bd/mysql/prod/init.sh:/init.sh:ro
+    entrypoint: ["sh", "/init.sh"]
+    depends_on:
+      mysql:
+        condition: service_healthy
   mongo:
     image: mongo:7
     restart: unless-stopped
@@ -55,6 +69,48 @@ services:
       servicio-autenticacion:
         condition: service_started
 
+  servicio-estudiante:
+    build: ./servicios/servicio-estudiante
+    restart: unless-stopped
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/universidad_estudiantes
+      DB_USERNAME: svc_estudiantes
+      DB_PASSWORD: ${DB_ESTUDIANTE_PASSWORD}
+      AUTH_URL: http://servicio-autenticacion:8081
+      JAVA_TOOL_OPTIONS: -Xmx256m
+    depends_on:
+      mysql-init:
+        condition: service_completed_successfully
+      servicio-autenticacion:
+        condition: service_started
+
+  servicio-curso:
+    build: ./servicios/servicio-curso
+    restart: unless-stopped
+    environment:
+      SERVER_ADDRESS: 0.0.0.0
+      DB_URL: jdbc:mysql://mysql:3306/universidad_cursos
+      DB_USERNAME: svc_cursos
+      DB_PASSWORD: ${DB_CURSO_PASSWORD}
+      AUTH_SERVICE_URL: http://servicio-autenticacion:8081
+      JAVA_TOOL_OPTIONS: -Xmx256m
+    depends_on:
+      mysql-init:
+        condition: service_completed_successfully
+      servicio-autenticacion:
+        condition: service_started
+
+  servicio-financiero:
+    build: ./servicios/servicio-financiero
+    restart: unless-stopped
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/universidad_financiero
+      AUTH_URL: http://servicio-autenticacion:8081
+      JAVA_TOOL_OPTIONS: -Xmx256m
+    depends_on:
+      - mongo
+      - servicio-autenticacion
+
   api-gateway:
     build: ./infra/api-gateway
     restart: unless-stopped
@@ -64,6 +120,8 @@ services:
       AUTH_URL: http://servicio-autenticacion:8081
       MATRICULA_URL: http://servicio-matricula:8085
       CURSO_URL: http://servicio-curso:8083
+      ESTUDIANTE_URL: http://servicio-estudiante:8082
+      FINANZAS_URL: http://servicio-financiero:8084
       JAVA_TOOL_OPTIONS: -Xmx256m
     depends_on:
       - servicio-autenticacion
