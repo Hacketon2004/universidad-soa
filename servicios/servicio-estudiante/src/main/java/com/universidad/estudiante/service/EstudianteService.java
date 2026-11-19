@@ -63,7 +63,15 @@ public class EstudianteService {
         Estudiante estudiante = obtenerEstudiante(id);
         return convertirAResponse(estudiante);
     }
+    // BUSCAR ESTUDIANTE POR USUARIO ID
+    @Transactional(readOnly = true)
+    public EstudianteResponse buscarPorUsuarioId(String usuarioId) {
+       Estudiante estudiante = estudianteRepository.findByUsuarioId(usuarioId)
+            .orElseThrow(() -> new EstudianteNoEncontradoException(
+                    "No existe un estudiante vinculado al usuario " + usuarioId));
 
+    return convertirAResponse(estudiante);
+    }
     // ACTUALIZAR ESTUDIANTE
     @Transactional
     public EstudianteResponse actualizar(Long id, EstudianteRequest request) {
