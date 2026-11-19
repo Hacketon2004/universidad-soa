@@ -26,7 +26,7 @@ import com.universidad.financiero.service.FinancieroService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/financiero")
+@RequestMapping("/api/finanzas")
 public class FinancieroController {
 
     private final FinancieroService servicio;
