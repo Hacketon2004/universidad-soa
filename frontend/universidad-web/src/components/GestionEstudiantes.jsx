@@ -13,6 +13,7 @@ import {
 import "./GestionEstudiantes.css";
 
 const formularioInicial = {
+  usuarioId: "",
   codigoEstudiante: "",
   dni: "",
   nombres: "",
@@ -68,6 +69,7 @@ export default function GestionEstudiantes({ token }) {
   function abrirEdicion(estudiante) {
     setEditando(estudiante);
     setFormulario({
+      usuarioId: estudiante.usuarioId || "",
       codigoEstudiante: estudiante.codigo || "",
       dni: estudiante.dni || "",
       nombres: estudiante.nombres || "",
@@ -232,6 +234,7 @@ export default function GestionEstudiantes({ token }) {
 
             <div className="ge-form-grid">
               {[
+                ["usuarioId", "ID de usuario (cuenta de acceso)"],
                 ["codigoEstudiante", "Código de estudiante"],
                 ["dni", "DNI"],
                 ["nombres", "Nombres"],
@@ -248,7 +251,7 @@ export default function GestionEstudiantes({ token }) {
                     type={type || "text"}
                     value={formulario[name]}
                     onChange={cambiarCampo}
-                    required={["codigoEstudiante","dni","nombres","apellidos","carrera"].includes(name)}
+                    required={["usuarioId","codigoEstudiante","dni","nombres","apellidos","carrera"].includes(name)}
                   />
                 </label>
               ))}
