@@ -116,8 +116,11 @@ async function solicitudEstudiantes(ruta, metodo, token, datos) {
   const resultado = await respuesta.json().catch(() => ({}));
 
   if (!respuesta.ok) {
+    const detalle = resultado.errores
+      ? ": " + Object.values(resultado.errores).join(", ")
+      : "";
     throw new Error(
-      resultado.mensaje || `Error en estudiantes: ${respuesta.status}`
+      (resultado.mensaje || `Error en estudiantes: ${respuesta.status}`) + detalle
     );
   }
 
