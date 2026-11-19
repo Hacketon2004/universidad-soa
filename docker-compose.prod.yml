@@ -60,8 +60,8 @@ services:
       ESTUDIANTE_URL: http://servicio-estudiante:8082
       CURSO_URL: http://servicio-curso:8083
       # Cambiar a "true" cuando estudiantes y cursos esten desplegados en el servidor
-      INTEGRACION_ESTUDIANTES: "false"
-      INTEGRACION_CURSOS: "false"
+      INTEGRACION_ESTUDIANTES: "true"
+      INTEGRACION_CURSOS: "true"
       JAVA_TOOL_OPTIONS: -Xmx384m
     depends_on:
       mysql:
