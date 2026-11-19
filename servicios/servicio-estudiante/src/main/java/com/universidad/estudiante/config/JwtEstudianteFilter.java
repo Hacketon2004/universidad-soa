@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,11 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JwtEstudianteFilter extends OncePerRequestFilter {
 
-    private final RestClient restClient = RestClient.create("http://localhost:8081");
+    private final RestClient restClient;
+
+    public JwtEstudianteFilter(@Value("${auth.url}") String authUrl) {
+        this.restClient = RestClient.create(authUrl);
+    }
 
     @Override
     protected void doFilterInternal(
