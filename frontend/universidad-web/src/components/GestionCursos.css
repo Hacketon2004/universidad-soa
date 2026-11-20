@@ -1,14 +1,107 @@
 /* ==========================================================================
    GestionCursos.css
-   Estilo claro y limpio tipo dashboard de RRHH para GestionCursos
-   TODOS los estilos anidados bajo .gestion-cursos (sin selectores globales)
+   Estilo tema oscuro azul marino para GestionCursos
+   Paleta armónica integrada con el Dashboard
    ========================================================================== */
+
+/* Ancho completo: permitir que .gestion-cursos ocupe todo el ancho */
+.dashboard-main:has(.gestion-cursos) {
+  max-width: none;
+  width: 100%;
+}
+
+/* Variables CSS y Contenedor Principal */
+.gestion-cursos,
+.usuarios-modal-fondo.gestion-cursos {
+  /* Fondo y Paneles */
+  --c-bg: transparent;
+  --c-card-bg: #14243e;
+  --c-card-border: #22395a;
+  --c-card-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --c-card-radius: 16px;
+
+  /* Inputs y Selects */
+  --c-input-bg: #0c1a30;
+  --c-input-border: #2b4262;
+  --c-input-text: #e8eef9;
+  --c-input-placeholder: #7f93b2;
+  --c-input-focus-border: #3b82f6;
+  --c-input-focus-ring: rgba(59, 130, 246, 0.25);
+
+  /* Etiquetas y Textos */
+  --c-label-text: #c9d8eb;
+  --c-label-icon: #60a5fa;
+  --c-text-title: #f1f5ff;
+  --c-text-subtitle: #aabbd4;
+  --c-text-secondary: #8aa0c0;
+  --c-text-body: #e8eef9;
+
+  /* Botones */
+  --c-btn-primary-bg: #2563eb;
+  --c-btn-primary-hover: #1d4ed8;
+  --c-btn-primary-text: #ffffff;
+  --c-btn-secondary-bg: #1b2f4d;
+  --c-btn-secondary-border: #2b4262;
+  --c-btn-secondary-text: #dbeaff;
+  --c-btn-secondary-hover: #203a61;
+
+  /* Tabla */
+  --c-table-header-bg: #0f1e35;
+  --c-table-header-text: #60a5fa;
+  --c-table-row-bg: #14243e;
+  --c-table-row-border: #1e3352;
+  --c-table-row-hover: #1a2d4a;
+  --c-table-text: #e8eef9;
+  --c-header-icon-bg: rgba(59, 130, 246, 0.15);
+  --c-header-icon-color: #60a5fa;
+
+  /* Pills de Estado */
+  --c-pill-activo-bg: rgba(34, 197, 94, 0.15);
+  --c-pill-activo-text: #4ade80;
+  --c-pill-activo-border: rgba(34, 197, 94, 0.3);
+  --c-pill-cancelado-bg: rgba(239, 68, 68, 0.15);
+  --c-pill-cancelado-text: #f87171;
+  --c-pill-cancelado-border: rgba(239, 68, 68, 0.3);
+  --c-pill-ambar-bg: rgba(245, 158, 11, 0.15);
+  --c-pill-ambar-text: #fbbf24;
+  --c-pill-ambar-border: rgba(245, 158, 11, 0.3);
+  --c-pill-gris-bg: rgba(148, 163, 184, 0.15);
+  --c-pill-gris-text: #cbd5e1;
+  --c-pill-gris-border: rgba(148, 163, 184, 0.3);
+
+  /* Acciones de Tabla */
+  --c-action-btn-bg: #1b2f4d;
+  --c-action-btn-border: #2b4262;
+  --c-action-btn-hover: #203a61;
+  --c-action-blue: #60a5fa;
+  --c-action-amber: #fbbf24;
+  --c-action-red: #f87171;
+
+  /* Modales */
+  --c-modal-overlay: rgba(2, 8, 20, 0.7);
+  --c-modal-bg: #152640;
+  --c-modal-border: #2b4262;
+  --c-modal-separator: #22395a;
+  --c-modal-footer-bg: #12213a;
+  --c-modal-close: #8aa0c0;
+  --c-modal-close-hover: #e8eef9;
+
+  /* Alertas / Mensajes */
+  --c-alert-error-bg: rgba(239, 68, 68, 0.12);
+  --c-alert-error-border: rgba(239, 68, 68, 0.35);
+  --c-alert-error-text: #fca5a5;
+  --c-alert-success-bg: rgba(34, 197, 94, 0.12);
+  --c-alert-success-border: rgba(34, 197, 94, 0.35);
+  --c-alert-success-text: #86efac;
+}
 
 /* 1. Contenedor principal de la sección */
 .gestion-cursos {
-  background-color: #f1f5f9;
-  color: #0f172a;
+  background-color: var(--c-bg);
+  color: var(--c-text-body);
   min-height: 100%;
+  width: 100%;
+  max-width: none;
   box-sizing: border-box;
 }
 
@@ -22,7 +115,7 @@
 }
 
 .gestion-cursos .usuarios-etiqueta {
-  color: #2563eb;
+  color: var(--c-label-icon);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -30,14 +123,14 @@
 }
 
 .gestion-cursos .usuarios-cabecera h1 {
-  color: #0f172a;
+  color: var(--c-text-title);
   font-size: 26px;
   font-weight: 700;
   margin: 4px 0 6px;
 }
 
 .gestion-cursos .usuarios-cabecera p {
-  color: #64748b;
+  color: var(--c-text-subtitle);
   font-size: 14px;
   margin: 0;
 }
@@ -45,8 +138,8 @@
 /* 3. Botones principales de la vista */
 .gestion-cursos .usuarios-boton-principal,
 .gestion-cursos .cursos-btn-principal {
-  background-color: #2563eb;
-  color: #ffffff;
+  background-color: var(--c-btn-primary-bg);
+  color: var(--c-btn-primary-text);
   border: none;
   border-radius: 10px;
   padding: 10px 18px;
@@ -62,15 +155,15 @@
 
 .gestion-cursos .usuarios-boton-principal:hover,
 .gestion-cursos .cursos-btn-principal:hover {
-  background-color: #1d4ed8;
-  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+  background-color: var(--c-btn-primary-hover);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
 }
 
 .gestion-cursos .usuarios-boton-secundario,
 .gestion-cursos .cursos-btn-secundario {
-  background-color: #ffffff;
-  color: #0f172a;
-  border: 1px solid #cbd5e1;
+  background-color: var(--c-btn-secondary-bg);
+  color: var(--c-btn-secondary-text);
+  border: 1px solid var(--c-btn-secondary-border);
   border-radius: 10px;
   padding: 10px 16px;
   font-size: 14px;
@@ -85,9 +178,9 @@
 
 .gestion-cursos .usuarios-boton-secundario:hover,
 .gestion-cursos .cursos-btn-secundario:hover {
-  background-color: #f8fafc;
-  border-color: #94a3b8;
-  color: #0f172a;
+  background-color: var(--c-btn-secondary-hover);
+  border-color: #3b82f6;
+  color: #ffffff;
 }
 
 .gestion-cursos button:disabled {
@@ -100,14 +193,15 @@
   display: grid;
   gap: 16px;
   margin-bottom: 24px;
+  width: 100%;
 }
 
 .gestion-cursos .usuarios-resumen > div {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
+  background-color: var(--c-card-bg);
+  border: 1px solid var(--c-card-border);
+  border-radius: var(--c-card-radius);
   padding: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--c-card-shadow);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -115,15 +209,16 @@
 }
 
 .gestion-cursos .usuarios-resumen > div:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  border-color: #2f4b75;
 }
 
 .gestion-cursos .usuarios-resumen svg {
-  color: #2563eb;
+  color: var(--c-label-icon);
 }
 
 .gestion-cursos .usuarios-resumen span {
-  color: #64748b;
+  color: var(--c-text-secondary);
   font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
@@ -131,30 +226,36 @@
 }
 
 .gestion-cursos .usuarios-resumen strong {
-  color: #0f172a;
+  color: var(--c-text-title);
   font-size: 26px;
   font-weight: 700;
 }
 
-/* 5. Tarjetas generales blancas con borde #e2e8f0, radio 16px y sombra suave */
+/* 5. Tarjetas generales y paneles */
 .gestion-cursos .cursos-card,
 .gestion-cursos .usuarios-panel {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  background-color: var(--c-card-bg);
+  border: 1px solid var(--c-card-border);
+  border-radius: var(--c-card-radius);
+  box-shadow: var(--c-card-shadow);
   padding: 24px;
   margin-bottom: 24px;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
 }
 
 /* 6. Panel de Filtros */
 .gestion-cursos .cursos-filtros-panel {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  background-color: var(--c-card-bg);
+  border: 1px solid var(--c-card-border);
+  border-radius: var(--c-card-radius);
+  box-shadow: var(--c-card-shadow);
   padding: 20px 24px;
   margin-bottom: 24px;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
 }
 
 .gestion-cursos .cursos-filtros-grid {
@@ -178,13 +279,13 @@
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  color: #0f172a;
+  color: var(--c-label-text);
   letter-spacing: 0.03em;
 }
 
 .gestion-cursos .cursos-filtro-etiqueta svg,
 .gestion-cursos .cursos-campo-label svg {
-  color: #2563eb;
+  color: var(--c-label-icon);
   flex-shrink: 0;
 }
 
@@ -194,10 +295,10 @@
 .gestion-cursos .usuarios-formulario select {
   height: 40px;
   width: 100%;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--c-input-border);
   border-radius: 10px;
-  background-color: #ffffff;
-  color: #0f172a;
+  background-color: var(--c-input-bg);
+  color: var(--c-input-text);
   padding: 0 14px;
   font-size: 13px;
   font-family: inherit;
@@ -208,7 +309,7 @@
 
 .gestion-cursos .cursos-campo::placeholder,
 .gestion-cursos .usuarios-formulario input::placeholder {
-  color: #94a3b8;
+  color: var(--c-input-placeholder);
   text-transform: uppercase;
   font-size: 12px;
 }
@@ -217,18 +318,18 @@
 .gestion-cursos .usuarios-formulario input:focus,
 .gestion-cursos .usuarios-formulario select:focus,
 .gestion-cursos .cursos-textarea:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  border-color: var(--c-input-focus-border);
+  box-shadow: 0 0 0 3px var(--c-input-focus-ring);
 }
 
 .gestion-cursos .cursos-textarea {
   height: auto;
   min-height: 90px;
   padding: 12px 14px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--c-input-border);
   border-radius: 10px;
-  background-color: #ffffff;
-  color: #0f172a;
+  background-color: var(--c-input-bg);
+  color: var(--c-input-text);
   font-family: inherit;
   font-size: 13px;
   outline: none;
@@ -238,32 +339,32 @@
 }
 
 .gestion-cursos .cursos-textarea::placeholder {
-  color: #94a3b8;
+  color: var(--c-input-placeholder);
   font-size: 12px;
 }
 
-/* 8. Selects nativos con chevron SVG gris y opciones legibles */
+/* 8. Selects nativos con chevron SVG gris azulado (#8aa0c0) y opciones legibles */
 .gestion-cursos select.cursos-campo,
 .gestion-cursos .usuarios-formulario select,
 .gestion-cursos select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-color: #ffffff;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-color: var(--c-input-bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238aa0c0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 16px 16px;
   padding-right: 36px;
   cursor: pointer;
-  color: #0f172a;
+  color: var(--c-input-text);
   text-transform: uppercase;
   box-sizing: border-box;
 }
 
 .gestion-cursos select option {
-  background-color: #ffffff;
-  color: #0f172a;
+  background-color: #0c1a30;
+  color: #e8eef9;
   padding: 8px 12px;
 }
 
@@ -281,10 +382,10 @@
 .gestion-cursos .cursos-btn-buscar-docente {
   height: 40px;
   padding: 0 14px;
-  background-color: #ffffff;
-  border: 1px solid #cbd5e1;
+  background-color: var(--c-btn-secondary-bg);
+  border: 1px solid var(--c-btn-secondary-border);
   border-radius: 10px;
-  color: #2563eb;
+  color: var(--c-label-icon);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -294,17 +395,18 @@
 }
 
 .gestion-cursos .cursos-btn-buscar-docente:hover {
-  background-color: #eff6ff;
+  background-color: var(--c-btn-secondary-hover);
   border-color: #3b82f6;
+  color: #ffffff;
 }
 
-/* 9. Botón LIMPIAR ancho completo gris claro con ícono Eraser */
+/* 9. Botón LIMPIAR ancho completo */
 .gestion-cursos .cursos-btn-limpiar {
   width: 100%;
   height: 40px;
-  background-color: #e2e8f0;
-  color: #0f172a;
-  border: none;
+  background-color: var(--c-btn-secondary-bg);
+  color: var(--c-btn-secondary-text);
+  border: 1px solid var(--c-btn-secondary-border);
   border-radius: 10px;
   font-size: 13px;
   font-weight: 700;
@@ -314,15 +416,17 @@
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .gestion-cursos .cursos-btn-limpiar:hover {
-  background-color: #cbd5e1;
+  background-color: var(--c-btn-secondary-hover);
+  border-color: #3b82f6;
+  color: #ffffff;
 }
 
 .gestion-cursos .cursos-btn-limpiar svg {
-  color: #2563eb;
+  color: var(--c-label-icon);
 }
 
 /* 10. Cabecera de la tabla */
@@ -337,24 +441,24 @@
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background-color: #eff6ff;
+  background-color: var(--c-header-icon-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #2563eb;
+  color: var(--c-header-icon-color);
   flex-shrink: 0;
 }
 
 .gestion-cursos .cursos-tabla-titulo {
   font-size: 18px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--c-text-title);
   margin: 0 0 2px 0;
 }
 
 .gestion-cursos .cursos-tabla-subtitulo {
   font-size: 13px;
-  color: #64748b;
+  color: var(--c-text-subtitle);
   margin: 0;
 }
 
@@ -362,7 +466,9 @@
 .gestion-cursos .usuarios-tabla-contenedor {
   overflow-x: auto;
   border-radius: 10px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--c-table-row-border);
+  width: 100%;
+  max-width: none;
 }
 
 .gestion-cursos .usuarios-tabla {
@@ -372,36 +478,36 @@
 }
 
 .gestion-cursos .usuarios-tabla th {
-  background-color: #f8fafc;
-  color: #2563eb;
+  background-color: var(--c-table-header-bg);
+  color: var(--c-table-header-text);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   padding: 12px 14px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--c-table-row-border);
   white-space: nowrap;
 }
 
 .gestion-cursos .usuarios-tabla tbody tr {
-  background-color: #ffffff;
+  background-color: var(--c-table-row-bg);
   transition: background-color 0.15s ease;
 }
 
 .gestion-cursos .usuarios-tabla tbody tr:hover {
-  background-color: #f8fafc;
+  background-color: var(--c-table-row-hover);
 }
 
 .gestion-cursos .usuarios-tabla td {
   padding: 14px 12px;
-  border-bottom: 1px solid #f1f5f9;
-  color: #334155;
+  border-bottom: 1px solid var(--c-table-row-border);
+  color: var(--c-table-text);
   font-size: 14px;
   vertical-align: middle;
 }
 
 .gestion-cursos .usuarios-tabla td strong {
-  color: #0f172a;
+  color: var(--c-text-title);
 }
 
 /* 12. Estados como Pills */
@@ -416,12 +522,14 @@
   font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
+  border: 1px solid transparent;
 }
 
 .gestion-cursos .cursos-pill.pill-activo,
 .gestion-cursos .usuarios-estado.activo {
-  background-color: #dcfce7;
-  color: #15803d;
+  background-color: var(--c-pill-activo-bg);
+  color: var(--c-pill-activo-text);
+  border-color: var(--c-pill-activo-border);
 }
 
 .gestion-cursos .pill-punto {
@@ -431,18 +539,21 @@
 
 .gestion-cursos .cursos-pill.pill-cancelado,
 .gestion-cursos .usuarios-estado.inactivo {
-  background-color: #fee2e2;
-  color: #b91c1c;
+  background-color: var(--c-pill-cancelado-bg);
+  color: var(--c-pill-cancelado-text);
+  border-color: var(--c-pill-cancelado-border);
 }
 
 .gestion-cursos .cursos-pill.pill-ambar {
-  background-color: #fef3c7;
-  color: #b45309;
+  background-color: var(--c-pill-ambar-bg);
+  color: var(--c-pill-ambar-text);
+  border-color: var(--c-pill-ambar-border);
 }
 
 .gestion-cursos .cursos-pill.pill-gris {
-  background-color: #f1f5f9;
-  color: #475569;
+  background-color: var(--c-pill-gris-bg);
+  color: var(--c-pill-gris-text);
+  border-color: var(--c-pill-gris-border);
 }
 
 /* 13. Botones de acción pequeños y cuadrados con borde */
@@ -459,18 +570,35 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
+  background-color: var(--c-action-btn-bg);
+  border: 1px solid var(--c-action-btn-border);
   border-radius: 8px;
-  color: #475569;
+  color: var(--c-action-blue);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .gestion-cursos .usuarios-acciones button:hover {
-  background-color: #f8fafc;
-  border-color: #cbd5e1;
-  color: #0f172a;
+  background-color: var(--c-action-btn-hover);
+  border-color: #3b82f6;
+}
+
+.gestion-cursos .usuarios-acciones button[title*="docente"] {
+  color: var(--c-action-amber);
+}
+
+.gestion-cursos .usuarios-acciones button[title*="docente"]:hover {
+  border-color: var(--c-action-amber);
+}
+
+.gestion-cursos .usuarios-acciones button[title*="Cancelar"],
+.gestion-cursos .usuarios-acciones button[title*="baja"] {
+  color: var(--c-action-red);
+}
+
+.gestion-cursos .usuarios-acciones button[title*="Cancelar"]:hover,
+.gestion-cursos .usuarios-acciones button[title*="baja"]:hover {
+  border-color: var(--c-action-red);
 }
 
 .gestion-cursos .usuarios-acciones button:disabled {
@@ -478,14 +606,15 @@
   cursor: not-allowed;
 }
 
-/* 14. Barra de progreso de cupos clara */
+/* 14. Barra de progreso de cupos */
 .gestion-cursos .cursos-cupos-porcentaje {
-  color: #64748b;
+  color: var(--c-text-secondary);
   font-size: 12px;
 }
 
 .gestion-cursos .cursos-barra-cupos-track {
-  background-color: #e2e8f0;
+  background-color: var(--c-input-bg);
+  border: 1px solid var(--c-table-row-border);
   border-radius: 9999px;
   height: 6px;
   width: 100%;
@@ -514,9 +643,9 @@
 /* 15. Mensajes de éxito y error */
 .gestion-cursos .usuarios-exito,
 .gestion-cursos .cursos-alerta-exito {
-  background-color: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  color: #166534;
+  background-color: var(--c-alert-success-bg);
+  border: 1px solid var(--c-alert-success-border);
+  color: var(--c-alert-success-text);
   border-radius: 10px;
   padding: 12px 16px;
   font-size: 13px;
@@ -526,9 +655,9 @@
 
 .gestion-cursos .usuarios-error,
 .gestion-cursos .cursos-alerta-error {
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #991b1b;
+  background-color: var(--c-alert-error-bg);
+  border: 1px solid var(--c-alert-error-border);
+  color: var(--c-alert-error-text);
   border-radius: 10px;
   padding: 12px 16px;
   font-size: 13px;
@@ -538,7 +667,7 @@
 
 .gestion-cursos .usuarios-vacio {
   padding: 32px 16px;
-  color: #64748b;
+  color: var(--c-text-secondary);
   text-align: center;
   font-size: 14px;
 }
@@ -548,9 +677,9 @@
 .usuarios-modal-fondo.gestion-cursos {
   position: fixed;
   inset: 0;
-  background-color: rgba(15, 23, 42, 0.45);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  background-color: var(--c-modal-overlay);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -562,15 +691,15 @@
 .usuarios-modal-fondo.gestion-cursos .usuarios-modal {
   position: relative;
   width: 100%;
-  max-width: 760px;
+  max-width: 820px;
   max-height: 90vh;
   overflow-y: auto;
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
+  background-color: var(--c-modal-bg);
+  border: 1px solid var(--c-modal-border);
+  border-radius: var(--c-card-radius);
   padding: 28px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  color: #0f172a;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+  color: var(--c-text-body);
   box-sizing: border-box;
 }
 
@@ -581,7 +710,7 @@
   right: 18px;
   background: transparent;
   border: none;
-  color: #94a3b8;
+  color: var(--c-modal-close);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -593,85 +722,104 @@
 
 .gestion-cursos .usuarios-modal-cerrar:hover,
 .usuarios-modal-fondo.gestion-cursos .usuarios-modal-cerrar:hover {
-  background-color: #f1f5f9;
-  color: #0f172a;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--c-modal-close-hover);
 }
 
-.gestion-cursos .cursos-modal-cabecera {
+.gestion-cursos .cursos-modal-cabecera,
+.usuarios-modal-fondo.gestion-cursos .cursos-modal-cabecera {
   margin-bottom: 12px;
 }
 
 .gestion-cursos .cursos-modal-cabecera h3,
-.gestion-cursos .usuarios-formulario h3 {
+.usuarios-modal-fondo.gestion-cursos .cursos-modal-cabecera h3,
+.gestion-cursos .usuarios-formulario h3,
+.usuarios-modal-fondo.gestion-cursos .usuarios-formulario h3 {
   font-size: 20px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--c-text-title);
   margin: 4px 0 2px 0;
 }
 
 .gestion-cursos .cursos-modal-cabecera p,
-.gestion-cursos .usuarios-formulario p {
+.usuarios-modal-fondo.gestion-cursos .cursos-modal-cabecera p,
+.gestion-cursos .usuarios-formulario p,
+.usuarios-modal-fondo.gestion-cursos .usuarios-formulario p {
   font-size: 13px;
-  color: #64748b;
+  color: var(--c-text-subtitle);
   margin: 0;
 }
 
-.gestion-cursos .cursos-modal-separador {
+.gestion-cursos .cursos-modal-separador,
+.usuarios-modal-fondo.gestion-cursos .cursos-modal-separador {
   height: 1px;
-  background-color: #e2e8f0;
+  background-color: var(--c-modal-separator);
   margin: 16px 0 20px 0;
 }
 
 /* Grilla de formularios en 2 columnas (1 en móvil <640px) */
-.gestion-cursos .cursos-form-grid {
+.gestion-cursos .cursos-form-grid,
+.usuarios-modal-fondo.gestion-cursos .cursos-form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 }
 
-.gestion-cursos .cursos-form-campo {
+.gestion-cursos .cursos-form-campo,
+.usuarios-modal-fondo.gestion-cursos .cursos-form-campo {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.gestion-cursos .cursos-col-span-2 {
+.gestion-cursos .cursos-col-span-2,
+.usuarios-modal-fondo.gestion-cursos .cursos-col-span-2 {
   grid-column: span 2;
 }
 
 @media (max-width: 640px) {
-  .gestion-cursos .cursos-form-grid {
+  .gestion-cursos .cursos-form-grid,
+  .usuarios-modal-fondo.gestion-cursos .cursos-form-grid {
     grid-template-columns: 1fr;
   }
-  .gestion-cursos .cursos-col-span-2 {
+  .gestion-cursos .cursos-col-span-2,
+  .usuarios-modal-fondo.gestion-cursos .cursos-col-span-2 {
     grid-column: span 1;
   }
 }
 
 /* Listas de prerrequisitos / cursos aprobados */
-.gestion-cursos .cursos-lista-seleccion {
+.gestion-cursos .cursos-lista-seleccion,
+.usuarios-modal-fondo.gestion-cursos .cursos-lista-seleccion {
   max-height: 150px;
   overflow-y: auto;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--c-input-border);
   border-radius: 10px;
   padding: 10px 14px;
-  background-color: #f8fafc;
+  background-color: var(--c-input-bg);
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.gestion-cursos .cursos-checkbox-item {
+.gestion-cursos .cursos-checkbox-item,
+.usuarios-modal-fondo.gestion-cursos .cursos-checkbox-item {
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
   font-size: 13px;
   font-weight: normal;
-  color: #334155;
+  color: var(--c-text-body);
 }
 
-.gestion-cursos .cursos-checkbox-item input[type="checkbox"] {
+.gestion-cursos .cursos-checkbox-item strong,
+.usuarios-modal-fondo.gestion-cursos .cursos-checkbox-item strong {
+  color: var(--c-text-title);
+}
+
+.gestion-cursos .cursos-checkbox-item input[type="checkbox"],
+.usuarios-modal-fondo.gestion-cursos .cursos-checkbox-item input[type="checkbox"] {
   width: auto;
   accent-color: #2563eb;
   cursor: pointer;
@@ -679,18 +827,27 @@
 
 /* Pie del modal */
 .gestion-cursos .usuarios-formulario-acciones,
-.gestion-cursos .cursos-modal-pie {
+.usuarios-modal-fondo.gestion-cursos .usuarios-formulario-acciones,
+.gestion-cursos .cursos-modal-pie,
+.usuarios-modal-fondo.gestion-cursos .cursos-modal-pie {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 24px;
+  margin: 24px -28px -28px -28px;
+  padding: 18px 28px;
+  background-color: var(--c-modal-footer-bg);
+  border-top: 1px solid var(--c-modal-separator);
+  border-bottom-left-radius: var(--c-card-radius);
+  border-bottom-right-radius: var(--c-card-radius);
 }
 
 .gestion-cursos .usuarios-formulario-acciones button[type="button"],
-.gestion-cursos .usuarios-formulario-acciones button.cursos-btn-secundario {
-  background-color: #ffffff;
-  color: #334155;
-  border: 1px solid #cbd5e1;
+.usuarios-modal-fondo.gestion-cursos .usuarios-formulario-acciones button[type="button"],
+.gestion-cursos .usuarios-formulario-acciones button.cursos-btn-secundario,
+.usuarios-modal-fondo.gestion-cursos .usuarios-formulario-acciones button.cursos-btn-secundario {
+  background-color: var(--c-btn-secondary-bg);
+  color: var(--c-btn-secondary-text);
+  border: 1px solid var(--c-btn-secondary-border);
   border-radius: 10px;
   padding: 10px 18px;
   font-size: 14px;
@@ -700,16 +857,20 @@
 }
 
 .gestion-cursos .usuarios-formulario-acciones button[type="button"]:hover,
-.gestion-cursos .usuarios-formulario-acciones button.cursos-btn-secundario:hover {
-  background-color: #f8fafc;
-  border-color: #94a3b8;
-  color: #0f172a;
+.usuarios-modal-fondo.gestion-cursos .usuarios-formulario-acciones button[type="button"]:hover,
+.gestion-cursos .usuarios-formulario-acciones button.cursos-btn-secundario:hover,
+.usuarios-modal-fondo.gestion-cursos .usuarios-formulario-acciones button.cursos-btn-secundario:hover {
+  background-color: var(--c-btn-secondary-hover);
+  border-color: #3b82f6;
+  color: #ffffff;
 }
 
 .gestion-cursos .usuarios-formulario-acciones button[type="submit"],
-.gestion-cursos .usuarios-formulario-acciones button.cursos-btn-principal {
-  background-color: #2563eb;
-  color: #ffffff;
+.usuarios-modal-fondo.gestion-cursos .usuarios-formulario-acciones button[type="submit"],
+.gestion-cursos .usuarios-formulario-acciones button.cursos-btn-principal,
+.usuarios-modal-fondo.gestion-cursos .usuarios-formulario-acciones button.cursos-btn-principal {
+  background-color: var(--c-btn-primary-bg);
+  color: var(--c-btn-primary-text);
   border: none;
   border-radius: 10px;
   padding: 10px 20px;
@@ -720,11 +881,14 @@
 }
 
 .gestion-cursos .usuarios-formulario-acciones button[type="submit"]:hover,
-.gestion-cursos .usuarios-formulario-acciones button.cursos-btn-principal:hover {
-  background-color: #1d4ed8;
+.usuarios-modal-fondo.gestion-cursos .usuarios-formulario-acciones button[type="submit"]:hover,
+.gestion-cursos .usuarios-formulario-acciones button.cursos-btn-principal:hover,
+.usuarios-modal-fondo.gestion-cursos .usuarios-formulario-acciones button.cursos-btn-principal:hover {
+  background-color: var(--c-btn-primary-hover);
 }
 
-.gestion-cursos .cursos-btn-peligro {
+.gestion-cursos .cursos-btn-peligro,
+.usuarios-modal-fondo.gestion-cursos .cursos-btn-peligro {
   background-color: #dc2626 !important;
   color: #ffffff !important;
   border: none !important;
@@ -736,20 +900,23 @@
   transition: background-color 0.15s ease !important;
 }
 
-.gestion-cursos .cursos-btn-peligro:hover {
+.gestion-cursos .cursos-btn-peligro:hover,
+.usuarios-modal-fondo.gestion-cursos .cursos-btn-peligro:hover {
   background-color: #b91c1c !important;
 }
 
 /* Modal Detalle */
-.gestion-cursos .cursos-detalle-grid {
+.gestion-cursos .cursos-detalle-grid,
+.usuarios-modal-fondo.gestion-cursos .cursos-detalle-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
   font-size: 14px;
 }
 
-.gestion-cursos .cursos-detalle-label {
-  color: #64748b;
+.gestion-cursos .cursos-detalle-label,
+.usuarios-modal-fondo.gestion-cursos .cursos-detalle-label {
+  color: var(--c-text-secondary);
   display: block;
   font-size: 12px;
   font-weight: 600;
@@ -757,29 +924,57 @@
   margin-bottom: 2px;
 }
 
-.gestion-cursos .cursos-detalle-seccion {
+.gestion-cursos .cursos-detalle-grid strong,
+.usuarios-modal-fondo.gestion-cursos .cursos-detalle-grid strong {
+  color: var(--c-text-title);
+}
+
+.gestion-cursos .cursos-detalle-seccion,
+.usuarios-modal-fondo.gestion-cursos .cursos-detalle-seccion {
   margin-top: 12px;
 }
 
-.gestion-cursos .cursos-detalle-texto {
+.gestion-cursos .cursos-detalle-texto,
+.usuarios-modal-fondo.gestion-cursos .cursos-detalle-texto {
   margin: 4px 0;
-  color: #0f172a;
+  color: var(--c-text-body);
   font-size: 14px;
 }
 
-.gestion-cursos .cursos-alerta-cancelacion {
+.gestion-cursos .cursos-alerta-cancelacion,
+.usuarios-modal-fondo.gestion-cursos .cursos-alerta-cancelacion {
   margin-top: 14px;
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
+  background-color: var(--c-alert-error-bg);
+  border: 1px solid var(--c-alert-error-border);
   border-radius: 10px;
   padding: 14px;
 }
 
-.gestion-cursos .cursos-alerta-cancelacion strong {
-  color: #991b1b;
+.gestion-cursos .cursos-alerta-cancelacion strong,
+.usuarios-modal-fondo.gestion-cursos .cursos-alerta-cancelacion strong {
+  color: var(--c-alert-error-text);
 }
 
-.gestion-cursos .cursos-alerta-cancelacion p {
-  color: #b91c1c;
+.gestion-cursos .cursos-alerta-cancelacion p,
+.usuarios-modal-fondo.gestion-cursos .cursos-alerta-cancelacion p {
+  color: var(--c-alert-error-text);
   margin: 4px 0;
+}
+
+/* Reseteo y adaptación de estilos inline oscuros en modales */
+.usuarios-modal-fondo.gestion-cursos .usuarios-modal p[style*="0f172a"],
+.usuarios-modal-fondo.gestion-cursos .usuarios-formulario p[style*="0f172a"] {
+  color: var(--c-text-title) !important;
+}
+
+.usuarios-modal-fondo.gestion-cursos .usuarios-modal h4[style*="0f172a"] {
+  color: var(--c-text-title) !important;
+}
+
+.usuarios-modal-fondo.gestion-cursos .usuarios-modal ul[style*="334155"] {
+  color: var(--c-text-body) !important;
+}
+
+.usuarios-modal-fondo.gestion-cursos .usuarios-modal ul[style*="334155"] strong {
+  color: var(--c-text-title) !important;
 }
