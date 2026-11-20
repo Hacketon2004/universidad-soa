@@ -41,7 +41,10 @@ public class JwtEstudianteFilter extends OncePerRequestFilter {
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authorization == null || !authorization.startsWith("Bearer ")) {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "Token JWT obligatorio");
+            response.sendError(
+                    HttpStatus.UNAUTHORIZED.value(),
+                    "Token JWT obligatorio"
+            );
             return;
         }
 
@@ -53,15 +56,26 @@ public class JwtEstudianteFilter extends OncePerRequestFilter {
                     .body(new ParameterizedTypeReference<Map<String, Object>>() {});
 
             if (resultado == null || !Boolean.TRUE.equals(resultado.get("valido"))) {
-                response.sendError(HttpStatus.UNAUTHORIZED.value(), "Token JWT inválido");
+                response.sendError(
+                        HttpStatus.UNAUTHORIZED.value(),
+                        "Token JWT invalido"
+                );
                 return;
             }
 
             String rol = String.valueOf(resultado.get("rol"));
             String usuarioId = String.valueOf(resultado.get("usuarioId"));
 
-            if (!List.of("ADMINISTRADOR", "SECRETARIA").contains(rol)) {
-                response.sendError(HttpStatus.FORBIDDEN.value(), "No tienes permisos para acceder");
+            if (!List.of(
+                    "ADMINISTRADOR",
+                    "SECRETARIA",
+                    "ESTUDIANTE"
+            ).contains(rol) || "null".equals(usuarioId)) {
+
+                response.sendError(
+                        HttpStatus.FORBIDDEN.value(),
+                        "No tienes permisos para acceder"
+                );
                 return;
             }
 
@@ -74,10 +88,17 @@ public class JwtEstudianteFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(autenticacion);
 
         } catch (RestClientResponseException ex) {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "Token JWT inválido o expirado");
+            response.sendError(
+                    HttpStatus.UNAUTHORIZED.value(),
+                    "Token JWT invalido o expirado"
+            );
             return;
+
         } catch (Exception ex) {
-            response.sendError(HttpStatus.BAD_GATEWAY.value(), "No se pudo verificar el token");
+            response.sendError(
+                    HttpStatus.BAD_GATEWAY.value(),
+                    "No se pudo verificar el token"
+            );
             return;
         }
 

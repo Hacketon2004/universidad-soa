@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -42,9 +43,36 @@ public class EstudianteController {
 
     // BUSCAR POR ID
     @GetMapping("/{id}")
-    public ResponseEntity<EstudianteResponse> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<EstudianteResponse> buscarPorId(
+            @PathVariable Long id) {
 
-        return ResponseEntity.ok(estudianteService.buscarPorId(id));
+        return ResponseEntity.ok(
+                estudianteService.buscarPorId(id));
+    }
+
+    // BUSCAR ESTUDIANTE POR USUARIO ID
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<EstudianteResponse> buscarPorUsuarioId(
+            @PathVariable String usuarioId,
+            Authentication authentication) {
+
+        String rol = authentication.getAuthorities()
+                .iterator()
+                .next()
+                .getAuthority();
+
+        boolean esAdministradorOSecretaria =
+                rol.equals("ROLE_ADMINISTRADOR") ||
+                rol.equals("ROLE_SECRETARIA");
+
+        if (!esAdministradorOSecretaria &&
+                !authentication.getName().equals(usuarioId)) {
+
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        return ResponseEntity.ok(
+                estudianteService.buscarPorUsuarioId(usuarioId));
     }
 
     // ACTUALIZAR ESTUDIANTE
@@ -53,12 +81,14 @@ public class EstudianteController {
             @PathVariable Long id,
             @Valid @RequestBody EstudianteRequest request) {
 
-        return ResponseEntity.ok(estudianteService.actualizar(id, request));
+        return ResponseEntity.ok(
+                estudianteService.actualizar(id, request));
     }
 
     // ELIMINAR ESTUDIANTE
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminar(
+            @PathVariable Long id) {
 
         estudianteService.eliminar(id);
 

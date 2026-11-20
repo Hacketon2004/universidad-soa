@@ -13,6 +13,7 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
     Optional<Estudiante> findByDni(String dni);
 
     Optional<Estudiante> findByCodigoEstudiante(String codigoEstudiante);
+    Optional<Estudiante> findByUsuarioId(String usuarioId);
 
     boolean existsByDni(String dni);
 
