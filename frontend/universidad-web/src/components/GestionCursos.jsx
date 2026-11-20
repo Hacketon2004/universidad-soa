@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Plus,
   Search,
-  RefreshCw,
   BookOpen,
   CircleCheck,
   CircleX,
@@ -14,6 +13,12 @@ import {
   UserCheck,
   Users,
   GraduationCap,
+  Eraser,
+  Tag,
+  Award,
+  Layers,
+  Mail,
+  FileText,
 } from "lucide-react";
 
 import {
@@ -30,6 +35,7 @@ import {
 } from "../services/api";
 
 import "./GestionUsuarios.css";
+import "./GestionCursos.css";
 
 const FORMULARIO_CURSO_INICIAL = {
   codigo: "",
@@ -510,34 +516,24 @@ export default function GestionCursos({ token, rol }) {
   function renderEstado(estado) {
     switch (estado) {
       case "ACTIVO":
-        return <span className="usuarios-estado activo">Activo</span>;
+        return (
+          <span className="cursos-pill pill-activo">
+            <span className="pill-punto">•</span> Activo
+          </span>
+        );
       case "CUPOS_AGOTADOS":
-        return (
-          <span
-            className="usuarios-estado"
-            style={{ background: "#4a3b1a", color: "#ffd56b" }}
-          >
-            Cupos agotados
-          </span>
-        );
+        return <span className="cursos-pill pill-ambar">Cupos agotados</span>;
       case "CANCELADO":
-        return <span className="usuarios-estado inactivo">Cancelado</span>;
+        return <span className="cursos-pill pill-cancelado">Cancelado</span>;
       case "CERRADO":
-        return (
-          <span
-            className="usuarios-estado"
-            style={{ background: "#2d3748", color: "#cbd5e0" }}
-          >
-            Cerrado
-          </span>
-        );
+        return <span className="cursos-pill pill-gris">Cerrado</span>;
       default:
-        return <span className="usuarios-estado">{estado}</span>;
+        return <span className="cursos-pill pill-gris">{estado}</span>;
     }
   }
 
   return (
-    <section className="gestion-usuarios">
+    <section className="gestion-usuarios gestion-cursos">
       <div className="usuarios-cabecera">
         <div>
           <span className="usuarios-etiqueta">ACADÉMICO</span>
@@ -594,87 +590,94 @@ export default function GestionCursos({ token, rol }) {
         </div>
       </div>
 
-      <div className="usuarios-panel">
-        <div className="usuarios-herramientas" style={{ flexWrap: "wrap" }}>
-          <div className="usuarios-busqueda">
-            <Search size={19} />
+      {/* Panel de Filtros */}
+      <div className="cursos-filtros-panel">
+        <div className="cursos-filtros-grid">
+          <div className="cursos-filtro-item">
+            <label className="cursos-filtro-etiqueta" htmlFor="filtro-busqueda">
+              <Search size={14} /> BÚSQUEDA
+            </label>
             <input
+              id="filtro-busqueda"
               type="text"
-              placeholder="Buscar por código o nombre..."
+              className="cursos-campo"
+              placeholder="BUSCAR POR CÓDIGO O NOMBRE..."
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
             />
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: "10px",
-              flexWrap: "wrap",
-              alignItems: "center",
-            }}
-          >
+          <div className="cursos-filtro-item">
+            <label className="cursos-filtro-etiqueta" htmlFor="filtro-ciclo">
+              <Layers size={14} /> CICLO
+            </label>
             <select
+              id="filtro-ciclo"
+              className="cursos-campo"
               value={cicloFiltro}
               onChange={(e) => manejarCambioCiclo(e.target.value)}
               disabled={cargando}
-              style={{
-                background: "#0c1a30",
-                color: "white",
-                border: "1px solid #385373",
-                borderRadius: "10px",
-                padding: "10px 14px",
-                outline: "none",
-                cursor: "pointer",
-              }}
             >
-              <option value="">Ciclo: Todos</option>
+              <option value="">TODOS LOS CICLOS</option>
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((c) => (
                 <option key={c} value={c}>
-                  Ciclo {c}
+                  CICLO {c}
                 </option>
               ))}
             </select>
+          </div>
 
+          <div className="cursos-filtro-item">
+            <label className="cursos-filtro-etiqueta" htmlFor="filtro-docente">
+              <UserCheck size={14} /> DOCENTE (ID)
+            </label>
             <form
               onSubmit={manejarBuscarDocente}
-              style={{ display: "flex", gap: "6px", alignItems: "center" }}
+              className="cursos-filtro-docente-grupo"
             >
               <input
+                id="filtro-docente"
                 type="number"
                 min="1"
-                placeholder="ID docente"
+                className="cursos-campo"
+                placeholder="ID DOCENTE..."
                 value={docenteIdFiltro}
                 onChange={(e) => setDocenteIdFiltro(e.target.value)}
-                style={{
-                  width: "110px",
-                  background: "#0c1a30",
-                  color: "white",
-                  border: "1px solid #385373",
-                  borderRadius: "10px",
-                  padding: "10px 12px",
-                  outline: "none",
-                }}
               />
               <button
                 type="submit"
-                className="usuarios-boton-secundario"
+                className="cursos-btn-buscar-docente"
                 disabled={cargando}
+                title="Buscar por docente"
               >
-                <Search size={18} />
-                Buscar
+                <Search size={16} />
               </button>
             </form>
+          </div>
+        </div>
 
-            <button
-              type="button"
-              className="usuarios-boton-secundario"
-              onClick={manejarActualizar}
-              disabled={cargando}
-            >
-              <RefreshCw size={18} />
-              Actualizar
-            </button>
+        <button
+          type="button"
+          className="cursos-btn-limpiar"
+          onClick={manejarActualizar}
+          disabled={cargando}
+        >
+          <Eraser size={16} />
+          LIMPIAR
+        </button>
+      </div>
+
+      {/* Tarjeta de la Tabla */}
+      <div className="usuarios-panel cursos-tabla-card">
+        <div className="cursos-tabla-cabecera">
+          <div className="cursos-cabecera-icono">
+            <BookOpen size={20} />
+          </div>
+          <div>
+            <h2 className="cursos-tabla-titulo">Listado de Cursos</h2>
+            <p className="cursos-tabla-subtitulo">
+              Oferta académica, cupos disponibles y estado docente
+            </p>
           </div>
         </div>
 
@@ -727,29 +730,20 @@ export default function GestionCursos({ token, rol }) {
                         <span>
                           {curso.cuposDisponibles} / {curso.cuposTotales}
                         </span>{" "}
-                        <small style={{ color: "#aabbd4" }}>
+                        <small className="cursos-cupos-porcentaje">
                           ({curso.porcentajeOcupacion}%)
                         </small>
-                        <div
-                          style={{
-                            background: "#203654",
-                            borderRadius: "4px",
-                            height: "6px",
-                            width: "100%",
-                            marginTop: "4px",
-                            overflow: "hidden",
-                          }}
-                        >
+                        <div className="cursos-barra-cupos-track">
                           <div
+                            className={`cursos-barra-cupos-fill ${
+                              curso.alertaCupo === "AGOTADO" ||
+                              curso.cuposDisponibles === 0
+                                ? "fill-agotado"
+                                : curso.alertaCupo === "ULTIMOS_CUPOS"
+                                ? "fill-ultimos"
+                                : "fill-disponible"
+                            }`}
                             style={{
-                              background:
-                                curso.alertaCupo === "AGOTADO" ||
-                                curso.cuposDisponibles === 0
-                                  ? "#ffad9d"
-                                  : curso.alertaCupo === "ULTIMOS_CUPOS"
-                                  ? "#ffd56b"
-                                  : "#73e0af",
-                              height: "100%",
                               width: `${Math.min(
                                 curso.porcentajeOcupacion ?? 0,
                                 100
@@ -819,13 +813,12 @@ export default function GestionCursos({ token, rol }) {
 
       {/* Modal 1: Ver Detalle */}
       {modalDetalle && (
-        <div className="usuarios-modal-fondo">
+        <div className="usuarios-modal-fondo gestion-cursos">
           <div
             className="usuarios-modal"
             role="dialog"
             aria-modal="true"
             aria-label="Detalle del curso"
-            style={{ maxWidth: "560px" }}
           >
             <button
               className="usuarios-modal-cerrar"
@@ -841,67 +834,64 @@ export default function GestionCursos({ token, rol }) {
               <p className="usuarios-vacio">No se pudo cargar el detalle.</p>
             ) : (
               <div className="usuarios-formulario">
-                <span className="usuarios-etiqueta">DETALLE ACADÉMICO</span>
-                <h3 style={{ margin: "4px 0 12px" }}>
-                  {detalleCurso.codigo} — {detalleCurso.nombre}
-                </h3>
+                <div className="cursos-modal-cabecera">
+                  <span className="usuarios-etiqueta">DETALLE ACADÉMICO</span>
+                  <h3>
+                    {detalleCurso.codigo} — {detalleCurso.nombre}
+                  </h3>
+                  <p>Información completa y estado de la asignatura</p>
+                </div>
+                <div className="cursos-modal-separador" />
 
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "12px",
-                    fontSize: "14px",
-                  }}
-                >
+                <div className="cursos-detalle-grid">
                   <div>
-                    <span style={{ color: "#aabbd4", display: "block" }}>ID:</span>
+                    <span className="cursos-detalle-label">ID:</span>
                     <strong>{detalleCurso.id}</strong>
                   </div>
                   <div>
-                    <span style={{ color: "#aabbd4", display: "block" }}>Ciclo:</span>
+                    <span className="cursos-detalle-label">Ciclo:</span>
                     <strong>Ciclo {detalleCurso.ciclo}</strong>
                   </div>
                   <div>
-                    <span style={{ color: "#aabbd4", display: "block" }}>Créditos:</span>
+                    <span className="cursos-detalle-label">Créditos:</span>
                     <strong>{detalleCurso.creditos}</strong>
                   </div>
                   <div>
-                    <span style={{ color: "#aabbd4", display: "block" }}>Estado:</span>
+                    <span className="cursos-detalle-label">Estado:</span>
                     {renderEstado(detalleCurso.estado)}
                   </div>
                   <div>
-                    <span style={{ color: "#aabbd4", display: "block" }}>Cupos totales:</span>
+                    <span className="cursos-detalle-label">Cupos totales:</span>
                     <strong>{detalleCurso.cuposTotales}</strong>
                   </div>
                   <div>
-                    <span style={{ color: "#aabbd4", display: "block" }}>Cupos disponibles:</span>
+                    <span className="cursos-detalle-label">Cupos disponibles:</span>
                     <strong>
                       {detalleCurso.cuposDisponibles} ({detalleCurso.porcentajeOcupacion}%)
                     </strong>
                   </div>
                 </div>
 
-                <div style={{ marginTop: "8px" }}>
-                  <span style={{ color: "#aabbd4", display: "block" }}>Mensaje de cupo:</span>
-                  <p style={{ margin: "4px 0", color: "#e8eef9" }}>
+                <div className="cursos-detalle-seccion">
+                  <span className="cursos-detalle-label">Mensaje de cupo:</span>
+                  <p className="cursos-detalle-texto">
                     {detalleCurso.mensajeCupo || "Sin alertas de cupo."}
                   </p>
                 </div>
 
-                <div style={{ marginTop: "8px" }}>
-                  <span style={{ color: "#aabbd4", display: "block" }}>Docente:</span>
-                  <p style={{ margin: "4px 0", color: "#e8eef9" }}>
+                <div className="cursos-detalle-seccion">
+                  <span className="cursos-detalle-label">Docente:</span>
+                  <p className="cursos-detalle-texto">
                     {detalleCurso.docenteNombre || "Por asignar"}
                     {detalleCurso.docenteId ? ` (ID: ${detalleCurso.docenteId})` : ""}
                     {detalleCurso.docenteCorreo ? ` — ${detalleCurso.docenteCorreo}` : ""}
                   </p>
                 </div>
 
-                <div style={{ marginTop: "8px" }}>
-                  <span style={{ color: "#aabbd4", display: "block" }}>Prerrequisitos:</span>
+                <div className="cursos-detalle-seccion">
+                  <span className="cursos-detalle-label">Prerrequisitos:</span>
                   {detalleCurso.prerrequisitos && detalleCurso.prerrequisitos.length > 0 ? (
-                    <ul style={{ margin: "4px 0", paddingLeft: "20px", color: "#e8eef9" }}>
+                    <ul style={{ margin: "4px 0", paddingLeft: "20px", color: "#334155" }}>
                       {detalleCurso.prerrequisitos.map((pre) => (
                         <li key={pre.id}>
                           <strong>{pre.codigo}</strong> – {pre.nombre} (Ciclo {pre.ciclo})
@@ -909,27 +899,19 @@ export default function GestionCursos({ token, rol }) {
                       ))}
                     </ul>
                   ) : (
-                    <p style={{ margin: "4px 0", color: "#aabbd4" }}>Ninguno</p>
+                    <p style={{ margin: "4px 0", color: "#64748b" }}>Ninguno</p>
                   )}
                 </div>
 
                 {(detalleCurso.estado === "CANCELADO" || detalleCurso.motivoCancelacion) && (
-                  <div
-                    style={{
-                      marginTop: "12px",
-                      background: "#2c1c1f",
-                      border: "1px solid #732d34",
-                      borderRadius: "8px",
-                      padding: "12px",
-                    }}
-                  >
-                    <span style={{ color: "#ffad9d", fontWeight: "bold", display: "block" }}>
+                  <div className="cursos-alerta-cancelacion">
+                    <span style={{ color: "#991b1b", fontWeight: "bold", display: "block" }}>
                       Información de cancelación
                     </span>
-                    <p style={{ margin: "4px 0", color: "#ffd5cb" }}>
+                    <p>
                       <strong>Motivo:</strong> {detalleCurso.motivoCancelacion || "—"}
                     </p>
-                    <p style={{ margin: "4px 0", color: "#ffd5cb" }}>
+                    <p>
                       <strong>Fecha:</strong>{" "}
                       {detalleCurso.fechaCancelacion
                         ? new Date(detalleCurso.fechaCancelacion).toLocaleString("es-PE")
@@ -951,7 +933,7 @@ export default function GestionCursos({ token, rol }) {
 
       {/* Modal 2: Crear / Editar Curso */}
       {modalCurso && (
-        <div className="usuarios-modal-fondo">
+        <div className="usuarios-modal-fondo gestion-cursos">
           <div
             className="usuarios-modal"
             role="dialog"
@@ -968,127 +950,143 @@ export default function GestionCursos({ token, rol }) {
             </button>
 
             <form onSubmit={guardarCurso} className="usuarios-formulario">
-              <span className="usuarios-etiqueta">
-                {cursoEditando ? "EDICIÓN" : "CREACIÓN"}
-              </span>
-              <h3>{cursoEditando ? "Editar curso" : "Nuevo curso"}</h3>
+              <div className="cursos-modal-cabecera">
+                <span className="usuarios-etiqueta">
+                  {cursoEditando ? "EDICIÓN" : "CREACIÓN"}
+                </span>
+                <h3>{cursoEditando ? "Editar curso" : "Nuevo curso"}</h3>
+                <p>
+                  {cursoEditando
+                    ? "Actualiza los parámetros y requerimientos del curso"
+                    : "Ingresa los datos para registrar una nueva asignatura"}
+                </p>
+              </div>
+              <div className="cursos-modal-separador" />
 
-              <label htmlFor="curso-codigo">Código</label>
-              <input
-                id="curso-codigo"
-                type="text"
-                value={formCurso.codigo}
-                onChange={(e) =>
-                  setFormCurso((prev) => ({ ...prev, codigo: e.target.value }))
-                }
-                placeholder="Ej. MAT101"
-                required
-              />
+              <div className="cursos-form-grid">
+                <div className="cursos-form-campo">
+                  <label htmlFor="curso-codigo" className="cursos-campo-label">
+                    <Tag size={14} /> CÓDIGO
+                  </label>
+                  <input
+                    id="curso-codigo"
+                    className="cursos-campo"
+                    type="text"
+                    value={formCurso.codigo}
+                    onChange={(e) =>
+                      setFormCurso((prev) => ({ ...prev, codigo: e.target.value }))
+                    }
+                    placeholder="EJ. MAT101"
+                    required
+                  />
+                </div>
 
-              <label htmlFor="curso-nombre">Nombre</label>
-              <input
-                id="curso-nombre"
-                type="text"
-                value={formCurso.nombre}
-                onChange={(e) =>
-                  setFormCurso((prev) => ({ ...prev, nombre: e.target.value }))
-                }
-                placeholder="Ej. Cálculo I"
-                required
-              />
+                <div className="cursos-form-campo">
+                  <label htmlFor="curso-ciclo" className="cursos-campo-label">
+                    <Layers size={14} /> CICLO (1–10)
+                  </label>
+                  <select
+                    id="curso-ciclo"
+                    className="cursos-campo"
+                    value={formCurso.ciclo}
+                    onChange={(e) =>
+                      setFormCurso((prev) => ({
+                        ...prev,
+                        ciclo: Number(e.target.value),
+                      }))
+                    }
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((c) => (
+                      <option key={c} value={c}>
+                        CICLO {c}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-              <label htmlFor="curso-creditos">Créditos (≥ 1)</label>
-              <input
-                id="curso-creditos"
-                type="number"
-                min="1"
-                value={formCurso.creditos}
-                onChange={(e) =>
-                  setFormCurso((prev) => ({ ...prev, creditos: e.target.value }))
-                }
-                required
-              />
+                <div className="cursos-form-campo cursos-col-span-2">
+                  <label htmlFor="curso-nombre" className="cursos-campo-label">
+                    <BookOpen size={14} /> NOMBRE DEL CURSO
+                  </label>
+                  <input
+                    id="curso-nombre"
+                    className="cursos-campo"
+                    type="text"
+                    value={formCurso.nombre}
+                    onChange={(e) =>
+                      setFormCurso((prev) => ({ ...prev, nombre: e.target.value }))
+                    }
+                    placeholder="EJ. CÁLCULO I"
+                    required
+                  />
+                </div>
 
-              <label htmlFor="curso-ciclo">Ciclo (1–10)</label>
-              <select
-                id="curso-ciclo"
-                value={formCurso.ciclo}
-                onChange={(e) =>
-                  setFormCurso((prev) => ({
-                    ...prev,
-                    ciclo: Number(e.target.value),
-                  }))
-                }
-              >
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((c) => (
-                  <option key={c} value={c}>
-                    Ciclo {c}
-                  </option>
-                ))}
-              </select>
+                <div className="cursos-form-campo">
+                  <label htmlFor="curso-creditos" className="cursos-campo-label">
+                    <Award size={14} /> CRÉDITOS (≥ 1)
+                  </label>
+                  <input
+                    id="curso-creditos"
+                    className="cursos-campo"
+                    type="number"
+                    min="1"
+                    value={formCurso.creditos}
+                    onChange={(e) =>
+                      setFormCurso((prev) => ({ ...prev, creditos: e.target.value }))
+                    }
+                    required
+                  />
+                </div>
 
-              <label htmlFor="curso-cupos">Cupos totales (≥ 0)</label>
-              <input
-                id="curso-cupos"
-                type="number"
-                min="0"
-                value={formCurso.cuposTotales}
-                onChange={(e) =>
-                  setFormCurso((prev) => ({
-                    ...prev,
-                    cuposTotales: e.target.value,
-                  }))
-                }
-                required
-              />
+                <div className="cursos-form-campo">
+                  <label htmlFor="curso-cupos" className="cursos-campo-label">
+                    <Users size={14} /> CUPOS TOTALES (≥ 0)
+                  </label>
+                  <input
+                    id="curso-cupos"
+                    className="cursos-campo"
+                    type="number"
+                    min="0"
+                    value={formCurso.cuposTotales}
+                    onChange={(e) =>
+                      setFormCurso((prev) => ({
+                        ...prev,
+                        cuposTotales: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                </div>
 
-              <label>Prerrequisitos</label>
-              <div
-                style={{
-                  maxHeight: "150px",
-                  overflowY: "auto",
-                  border: "1px solid #395577",
-                  borderRadius: "8px",
-                  padding: "10px",
-                  background: "#0c1a30",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "8px",
-                }}
-              >
-                {todosLosCursos.filter(
-                  (c) => !cursoEditando || c.id !== cursoEditando.id
-                ).length === 0 ? (
-                  <small style={{ color: "#aabbd4" }}>
-                    No hay otros cursos disponibles para seleccionar como prerrequisito.
-                  </small>
-                ) : (
-                  todosLosCursos
-                    .filter((c) => !cursoEditando || c.id !== cursoEditando.id)
-                    .map((c) => (
-                      <label
-                        key={c.id}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "8px",
-                          cursor: "pointer",
-                          fontSize: "13px",
-                          fontWeight: "normal",
-                        }}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={formCurso.prerrequisitosIds.includes(c.id)}
-                          onChange={() => alternarPrerrequisito(c.id)}
-                          style={{ width: "auto" }}
-                        />
-                        <span>
-                          <strong>{c.codigo}</strong> — {c.nombre} (Ciclo {c.ciclo})
-                        </span>
-                      </label>
-                    ))
-                )}
+                <div className="cursos-form-campo cursos-col-span-2">
+                  <label className="cursos-campo-label">
+                    <BookOpen size={14} /> PRERREQUISITOS
+                  </label>
+                  <div className="cursos-lista-seleccion">
+                    {todosLosCursos.filter(
+                      (c) => !cursoEditando || c.id !== cursoEditando.id
+                    ).length === 0 ? (
+                      <small style={{ color: "#64748b" }}>
+                        No hay otros cursos disponibles para seleccionar como prerrequisito.
+                      </small>
+                    ) : (
+                      todosLosCursos
+                        .filter((c) => !cursoEditando || c.id !== cursoEditando.id)
+                        .map((c) => (
+                          <label key={c.id} className="cursos-checkbox-item">
+                            <input
+                              type="checkbox"
+                              checked={formCurso.prerrequisitosIds.includes(c.id)}
+                              onChange={() => alternarPrerrequisito(c.id)}
+                            />
+                            <span>
+                              <strong>{c.codigo}</strong> — {c.nombre} (Ciclo {c.ciclo})
+                            </span>
+                          </label>
+                        ))
+                    )}
+                  </div>
+                </div>
               </div>
 
               {errorModalCurso && (
@@ -1120,7 +1118,7 @@ export default function GestionCursos({ token, rol }) {
 
       {/* Modal 3: Asignar Docente */}
       {modalDocente && (
-        <div className="usuarios-modal-fondo">
+        <div className="usuarios-modal-fondo gestion-cursos">
           <div
             className="usuarios-modal"
             role="dialog"
@@ -1137,53 +1135,74 @@ export default function GestionCursos({ token, rol }) {
             </button>
 
             <form onSubmit={guardarDocente} className="usuarios-formulario">
-              <span className="usuarios-etiqueta">DOCENTE</span>
-              <h3>Asignar docente a {cursoDocente?.codigo}</h3>
+              <div className="cursos-modal-cabecera">
+                <span className="usuarios-etiqueta">DOCENTE</span>
+                <h3>Asignar docente a {cursoDocente?.codigo}</h3>
+                <p>Vincula un profesor responsable para esta asignatura</p>
+              </div>
+              <div className="cursos-modal-separador" />
 
-              <label htmlFor="docente-id">ID del docente</label>
-              <input
-                id="docente-id"
-                type="number"
-                min="1"
-                value={formDocente.docenteId}
-                onChange={(e) =>
-                  setFormDocente((prev) => ({
-                    ...prev,
-                    docenteId: e.target.value,
-                  }))
-                }
-                placeholder="Ej. 10"
-                required
-              />
+              <div className="cursos-form-grid">
+                <div className="cursos-form-campo">
+                  <label htmlFor="docente-id" className="cursos-campo-label">
+                    <UserCheck size={14} /> ID DEL DOCENTE
+                  </label>
+                  <input
+                    id="docente-id"
+                    className="cursos-campo"
+                    type="number"
+                    min="1"
+                    value={formDocente.docenteId}
+                    onChange={(e) =>
+                      setFormDocente((prev) => ({
+                        ...prev,
+                        docenteId: e.target.value,
+                      }))
+                    }
+                    placeholder="EJ. 10"
+                    required
+                  />
+                </div>
 
-              <label htmlFor="docente-nombre">Nombre del docente</label>
-              <input
-                id="docente-nombre"
-                type="text"
-                value={formDocente.docenteNombre}
-                onChange={(e) =>
-                  setFormDocente((prev) => ({
-                    ...prev,
-                    docenteNombre: e.target.value,
-                  }))
-                }
-                placeholder="Ej. Mg. Juan Pérez"
-                required
-              />
+                <div className="cursos-form-campo">
+                  <label htmlFor="docente-nombre" className="cursos-campo-label">
+                    <UserCheck size={14} /> NOMBRE DEL DOCENTE
+                  </label>
+                  <input
+                    id="docente-nombre"
+                    className="cursos-campo"
+                    type="text"
+                    value={formDocente.docenteNombre}
+                    onChange={(e) =>
+                      setFormDocente((prev) => ({
+                        ...prev,
+                        docenteNombre: e.target.value,
+                      }))
+                    }
+                    placeholder="EJ. MG. JUAN PÉREZ"
+                    required
+                  />
+                </div>
 
-              <label htmlFor="docente-correo">Correo electrónico (opcional)</label>
-              <input
-                id="docente-correo"
-                type="email"
-                value={formDocente.docenteCorreo}
-                onChange={(e) =>
-                  setFormDocente((prev) => ({
-                    ...prev,
-                    docenteCorreo: e.target.value,
-                  }))
-                }
-                placeholder="docente@universidad.edu.pe"
-              />
+                <div className="cursos-form-campo cursos-col-span-2">
+                  <label htmlFor="docente-correo" className="cursos-campo-label">
+                    <Mail size={14} /> CORREO ELECTRÓNICO (OPCIONAL)
+                  </label>
+                  <input
+                    id="docente-correo"
+                    className="cursos-campo"
+                    type="email"
+                    value={formDocente.docenteCorreo}
+                    onChange={(e) =>
+                      setFormDocente((prev) => ({
+                        ...prev,
+                        docenteCorreo: e.target.value,
+                      }))
+                    }
+                    placeholder="DOCENTE@UNIVERSIDAD.EDU.PE"
+                  />
+                </div>
+              </div>
 
               {errorModalDocente && (
                 <p className="usuarios-error" role="alert">
@@ -1210,7 +1229,7 @@ export default function GestionCursos({ token, rol }) {
 
       {/* Modal 4: Cancelar Curso */}
       {modalCancelar && (
-        <div className="usuarios-modal-fondo">
+        <div className="usuarios-modal-fondo gestion-cursos">
           <div
             className="usuarios-modal"
             role="dialog"
@@ -1227,66 +1246,68 @@ export default function GestionCursos({ token, rol }) {
             </button>
 
             <form onSubmit={guardarCancelarCurso} className="usuarios-formulario">
-              <span className="usuarios-etiqueta">CANCELACIÓN</span>
-              <h3>Cancelar curso {cursoCancelar?.codigo}</h3>
-              <p>
-                Esta acción cancelará la oferta del curso y notificará a los estudiantes inscritos.
-              </p>
+              <div className="cursos-modal-cabecera">
+                <span className="usuarios-etiqueta">CANCELACIÓN</span>
+                <h3>Cancelar curso {cursoCancelar?.codigo}</h3>
+                <p>
+                  Esta acción cancelará la oferta del curso y notificará a los estudiantes inscritos.
+                </p>
+              </div>
+              <div className="cursos-modal-separador" />
 
-              <label htmlFor="cancelar-por">Cancelado por</label>
-              <input
-                id="cancelar-por"
-                type="text"
-                value={formCancelar.canceladoPor}
-                onChange={(e) =>
-                  setFormCancelar((prev) => ({
-                    ...prev,
-                    canceladoPor: e.target.value,
-                  }))
-                }
-                required
-              />
+              <div className="cursos-form-grid">
+                <div className="cursos-form-campo cursos-col-span-2">
+                  <label htmlFor="cancelar-por" className="cursos-campo-label">
+                    <UserCheck size={14} /> CANCELADO POR
+                  </label>
+                  <input
+                    id="cancelar-por"
+                    className="cursos-campo"
+                    type="text"
+                    value={formCancelar.canceladoPor}
+                    onChange={(e) =>
+                      setFormCancelar((prev) => ({
+                        ...prev,
+                        canceladoPor: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                </div>
 
-              <label htmlFor="cancelar-motivo">
-                Motivo de cancelación (10–500 caracteres)
-              </label>
-              <textarea
-                id="cancelar-motivo"
-                rows={4}
-                value={formCancelar.motivo}
-                onChange={(e) =>
-                  setFormCancelar((prev) => ({
-                    ...prev,
-                    motivo: e.target.value,
-                  }))
-                }
-                placeholder="Describe la razón por la que se cancela este curso..."
-                minLength={10}
-                maxLength={500}
-                required
-                style={{
-                  width: "100%",
-                  background: "#0c1a30",
-                  color: "white",
-                  border: "1px solid #395577",
-                  borderRadius: "9px",
-                  padding: "12px",
-                  outline: "none",
-                  resize: "vertical",
-                  fontFamily: "inherit",
-                }}
-              />
-              <small
-                style={{
-                  color:
-                    formCancelar.motivo.length < 10 ||
-                    formCancelar.motivo.length > 500
-                      ? "#ff9f9f"
-                      : "#aabbd4",
-                }}
-              >
-                {formCancelar.motivo.length} / 500 caracteres (mínimo 10)
-              </small>
+                <div className="cursos-form-campo cursos-col-span-2">
+                  <label htmlFor="cancelar-motivo" className="cursos-campo-label">
+                    <FileText size={14} /> MOTIVO DE CANCELACIÓN (10–500 CARACTERES)
+                  </label>
+                  <textarea
+                    id="cancelar-motivo"
+                    rows={4}
+                    className="cursos-textarea"
+                    value={formCancelar.motivo}
+                    onChange={(e) =>
+                      setFormCancelar((prev) => ({
+                        ...prev,
+                        motivo: e.target.value,
+                      }))
+                    }
+                    placeholder="Describe la razón por la que se cancela este curso..."
+                    minLength={10}
+                    maxLength={500}
+                    required
+                  />
+                  <small
+                    style={{
+                      color:
+                        formCancelar.motivo.length < 10 ||
+                        formCancelar.motivo.length > 500
+                          ? "#dc2626"
+                          : "#64748b",
+                    }}
+                  >
+                    {formCancelar.motivo.length} / 500 caracteres (mínimo 10)
+                  </small>
+                </div>
+              </div>
 
               {errorModalCancelar && (
                 <p className="usuarios-error" role="alert">
@@ -1305,7 +1326,7 @@ export default function GestionCursos({ token, rol }) {
                 <button
                   type="submit"
                   disabled={guardando}
-                  style={{ background: "#d9534f" }}
+                  className="cursos-btn-peligro"
                 >
                   {guardando ? "Cancelando..." : "Confirmar cancelación"}
                 </button>
@@ -1317,7 +1338,7 @@ export default function GestionCursos({ token, rol }) {
 
       {/* Modal 5: Dar de Baja (Confirmación) */}
       {modalBaja && (
-        <div className="usuarios-modal-fondo">
+        <div className="usuarios-modal-fondo gestion-cursos">
           <div
             className="usuarios-modal"
             role="dialog"
@@ -1334,18 +1355,25 @@ export default function GestionCursos({ token, rol }) {
             </button>
 
             <div className="usuarios-formulario">
-              <span className="usuarios-etiqueta">CONFIRMACIÓN</span>
-              <h3>Dar de baja curso</h3>
-              <p>
+              <div className="cursos-modal-cabecera">
+                <span className="usuarios-etiqueta">CONFIRMACIÓN</span>
+                <h3>Dar de baja curso</h3>
+                <p>Procedimiento de retiro definitivo de la oferta académica</p>
+              </div>
+              <div className="cursos-modal-separador" />
+
+              <p style={{ color: "#0f172a", fontSize: "15px" }}>
                 ¿Deseas dar de baja el curso{" "}
                 <strong>
                   {cursoBaja?.codigo} — {cursoBaja?.nombre}
                 </strong>
                 ?
               </p>
-              <p style={{ color: "#ffad9d", fontSize: "13px" }}>
-                El curso quedará cancelado ("Baja administrativa del curso") y dejará de aparecer en la oferta académica.
-              </p>
+              <div className="cursos-alerta-cancelacion">
+                <p>
+                  El curso quedará cancelado ("Baja administrativa del curso") y dejará de aparecer en la oferta académica.
+                </p>
+              </div>
 
               {errorModalBaja && (
                 <p className="usuarios-error" role="alert">
@@ -1365,7 +1393,7 @@ export default function GestionCursos({ token, rol }) {
                   type="button"
                   onClick={confirmarDarDeBaja}
                   disabled={guardando}
-                  style={{ background: "#c53030" }}
+                  className="cursos-btn-peligro"
                 >
                   {guardando ? "Eliminando..." : "Confirmar baja"}
                 </button>
@@ -1377,13 +1405,12 @@ export default function GestionCursos({ token, rol }) {
 
       {/* Modal 6: Consultar Disponibilidad */}
       {modalDisponibilidad && (
-        <div className="usuarios-modal-fondo">
+        <div className="usuarios-modal-fondo gestion-cursos">
           <div
             className="usuarios-modal"
             role="dialog"
             aria-modal="true"
             aria-label="Consultar disponibilidad"
-            style={{ maxWidth: "800px" }}
           >
             <button
               className="usuarios-modal-cerrar"
@@ -1394,71 +1421,60 @@ export default function GestionCursos({ token, rol }) {
             </button>
 
             <div className="usuarios-formulario">
-              <span className="usuarios-etiqueta">SIMULADOR ACADÉMICO</span>
-              <h3>Consultar disponibilidad de cursos</h3>
-              <p>
-                Evalúa qué asignaturas están habilitadas según el ciclo actual del estudiante y sus cursos aprobados.
-              </p>
+              <div className="cursos-modal-cabecera">
+                <span className="usuarios-etiqueta">SIMULADOR ACADÉMICO</span>
+                <h3>Consultar disponibilidad de cursos</h3>
+                <p>
+                  Evalúa qué asignaturas están habilitadas según el ciclo actual del estudiante y sus cursos aprobados.
+                </p>
+              </div>
+              <div className="cursos-modal-separador" />
 
               <form onSubmit={ejecutarConsultaDisponibilidad}>
-                <label htmlFor="disp-ciclo">Ciclo del estudiante (1–10)</label>
-                <select
-                  id="disp-ciclo"
-                  value={cicloEstudiante}
-                  onChange={(e) => setCicloEstudiante(Number(e.target.value))}
-                  style={{ marginBottom: "12px" }}
-                >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((c) => (
-                    <option key={c} value={c}>
-                      Ciclo {c}
-                    </option>
-                  ))}
-                </select>
+                <div className="cursos-form-grid">
+                  <div className="cursos-form-campo cursos-col-span-2">
+                    <label htmlFor="disp-ciclo" className="cursos-campo-label">
+                      <GraduationCap size={14} /> CICLO DEL ESTUDIANTE (1–10)
+                    </label>
+                    <select
+                      id="disp-ciclo"
+                      className="cursos-campo"
+                      value={cicloEstudiante}
+                      onChange={(e) => setCicloEstudiante(Number(e.target.value))}
+                    >
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((c) => (
+                        <option key={c} value={c}>
+                          CICLO {c}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-                <label>Cursos aprobados previamente</label>
-                <div
-                  style={{
-                    maxHeight: "150px",
-                    overflowY: "auto",
-                    border: "1px solid #395577",
-                    borderRadius: "8px",
-                    padding: "10px",
-                    background: "#0c1a30",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "8px",
-                    marginBottom: "12px",
-                  }}
-                >
-                  {todosLosCursos.length === 0 ? (
-                    <small style={{ color: "#aabbd4" }}>
-                      No hay cursos disponibles para seleccionar.
-                    </small>
-                  ) : (
-                    todosLosCursos.map((c) => (
-                      <label
-                        key={c.id}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "8px",
-                          cursor: "pointer",
-                          fontSize: "13px",
-                          fontWeight: "normal",
-                        }}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={cursosAprobadosIds.includes(c.id)}
-                          onChange={() => alternarCursoAprobado(c.id)}
-                          style={{ width: "auto" }}
-                        />
-                        <span>
-                          <strong>{c.codigo}</strong> — {c.nombre} (Ciclo {c.ciclo})
-                        </span>
-                      </label>
-                    ))
-                  )}
+                  <div className="cursos-form-campo cursos-col-span-2">
+                    <label className="cursos-campo-label">
+                      <CircleCheck size={14} /> CURSOS APROBADOS PREVIAMENTE
+                    </label>
+                    <div className="cursos-lista-seleccion">
+                      {todosLosCursos.length === 0 ? (
+                        <small style={{ color: "#64748b" }}>
+                          No hay cursos disponibles para seleccionar.
+                        </small>
+                      ) : (
+                        todosLosCursos.map((c) => (
+                          <label key={c.id} className="cursos-checkbox-item">
+                            <input
+                              type="checkbox"
+                              checked={cursosAprobadosIds.includes(c.id)}
+                              onChange={() => alternarCursoAprobado(c.id)}
+                            />
+                            <span>
+                              <strong>{c.codigo}</strong> — {c.nombre} (Ciclo {c.ciclo})
+                            </span>
+                          </label>
+                        ))
+                      )}
+                    </div>
+                  </div>
                 </div>
 
                 {errorDisponibilidad && (
@@ -1469,7 +1485,7 @@ export default function GestionCursos({ token, rol }) {
 
                 <div
                   className="usuarios-formulario-acciones"
-                  style={{ marginTop: "4px" }}
+                  style={{ marginTop: "16px" }}
                 >
                   <button type="submit" disabled={cargandoDisponibilidad}>
                     {cargandoDisponibilidad
@@ -1480,8 +1496,8 @@ export default function GestionCursos({ token, rol }) {
               </form>
 
               {resultadoDisponibilidad && (
-                <div style={{ marginTop: "16px" }}>
-                  <h4 style={{ margin: "0 0 12px", fontSize: "16px" }}>
+                <div style={{ marginTop: "20px" }}>
+                  <h4 style={{ margin: "0 0 12px", fontSize: "16px", color: "#0f172a" }}>
                     Cursos evaluados ({resultadoDisponibilidad.length})
                   </h4>
 
@@ -1513,8 +1529,8 @@ export default function GestionCursos({ token, rol }) {
                                 <span
                                   className={
                                     item.habilitado
-                                      ? "usuarios-estado activo"
-                                      : "usuarios-estado inactivo"
+                                      ? "cursos-pill pill-activo"
+                                      : "cursos-pill pill-cancelado"
                                   }
                                 >
                                   {item.habilitado ? "Sí" : "No"}

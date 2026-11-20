@@ -1,0 +1,785 @@
+/* ==========================================================================
+   GestionCursos.css
+   Estilo claro y limpio tipo dashboard de RRHH para GestionCursos
+   TODOS los estilos anidados bajo .gestion-cursos (sin selectores globales)
+   ========================================================================== */
+
+/* 1. Contenedor principal de la sección */
+.gestion-cursos {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+/* 2. Cabecera general de la sección */
+.gestion-cursos .usuarios-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.gestion-cursos .usuarios-etiqueta {
+  color: #2563eb;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.gestion-cursos .usuarios-cabecera h1 {
+  color: #0f172a;
+  font-size: 26px;
+  font-weight: 700;
+  margin: 4px 0 6px;
+}
+
+.gestion-cursos .usuarios-cabecera p {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* 3. Botones principales de la vista */
+.gestion-cursos .usuarios-boton-principal,
+.gestion-cursos .cursos-btn-principal {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gestion-cursos .usuarios-boton-principal:hover,
+.gestion-cursos .cursos-btn-principal:hover {
+  background-color: #1d4ed8;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.gestion-cursos .usuarios-boton-secundario,
+.gestion-cursos .cursos-btn-secundario {
+  background-color: #ffffff;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+}
+
+.gestion-cursos .usuarios-boton-secundario:hover,
+.gestion-cursos .cursos-btn-secundario:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.gestion-cursos button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 4. Tarjetas de Resumen (Estadísticas) */
+.gestion-cursos .usuarios-resumen {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.gestion-cursos .usuarios-resumen > div {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gestion-cursos .usuarios-resumen > div:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
+}
+
+.gestion-cursos .usuarios-resumen svg {
+  color: #2563eb;
+}
+
+.gestion-cursos .usuarios-resumen span {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.gestion-cursos .usuarios-resumen strong {
+  color: #0f172a;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+/* 5. Tarjetas generales blancas con borde #e2e8f0, radio 16px y sombra suave */
+.gestion-cursos .cursos-card,
+.gestion-cursos .usuarios-panel {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+/* 6. Panel de Filtros */
+.gestion-cursos .cursos-filtros-panel {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+
+.gestion-cursos .cursos-filtros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.gestion-cursos .cursos-filtro-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gestion-cursos .cursos-filtro-etiqueta,
+.gestion-cursos .cursos-campo-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #0f172a;
+  letter-spacing: 0.03em;
+}
+
+.gestion-cursos .cursos-filtro-etiqueta svg,
+.gestion-cursos .cursos-campo-label svg {
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+/* 7. Campos de texto, inputs y selects */
+.gestion-cursos .cursos-campo,
+.gestion-cursos .usuarios-formulario input,
+.gestion-cursos .usuarios-formulario select {
+  height: 40px;
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: #0f172a;
+  padding: 0 14px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gestion-cursos .cursos-campo::placeholder,
+.gestion-cursos .usuarios-formulario input::placeholder {
+  color: #94a3b8;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.gestion-cursos .cursos-campo:focus,
+.gestion-cursos .usuarios-formulario input:focus,
+.gestion-cursos .usuarios-formulario select:focus,
+.gestion-cursos .cursos-textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.gestion-cursos .cursos-textarea {
+  height: auto;
+  min-height: 90px;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+  resize: vertical;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gestion-cursos .cursos-textarea::placeholder {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+/* 8. Selects nativos con chevron SVG gris y opciones legibles */
+.gestion-cursos select.cursos-campo,
+.gestion-cursos .usuarios-formulario select,
+.gestion-cursos select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px 16px;
+  padding-right: 36px;
+  cursor: pointer;
+  color: #0f172a;
+  text-transform: uppercase;
+  box-sizing: border-box;
+}
+
+.gestion-cursos select option {
+  background-color: #ffffff;
+  color: #0f172a;
+  padding: 8px 12px;
+}
+
+/* Filtro docente con botón de búsqueda */
+.gestion-cursos .cursos-filtro-docente-grupo {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.gestion-cursos .cursos-filtro-docente-grupo .cursos-campo {
+  flex: 1;
+}
+
+.gestion-cursos .cursos-btn-buscar-docente {
+  height: 40px;
+  padding: 0 14px;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  color: #2563eb;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.gestion-cursos .cursos-btn-buscar-docente:hover {
+  background-color: #eff6ff;
+  border-color: #3b82f6;
+}
+
+/* 9. Botón LIMPIAR ancho completo gris claro con ícono Eraser */
+.gestion-cursos .cursos-btn-limpiar {
+  width: 100%;
+  height: 40px;
+  background-color: #e2e8f0;
+  color: #0f172a;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.gestion-cursos .cursos-btn-limpiar:hover {
+  background-color: #cbd5e1;
+}
+
+.gestion-cursos .cursos-btn-limpiar svg {
+  color: #2563eb;
+}
+
+/* 10. Cabecera de la tabla */
+.gestion-cursos .cursos-tabla-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.gestion-cursos .cursos-cabecera-icono {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background-color: #eff6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+.gestion-cursos .cursos-tabla-titulo {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 2px 0;
+}
+
+.gestion-cursos .cursos-tabla-subtitulo {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* 11. Tabla de Cursos */
+.gestion-cursos .usuarios-tabla-contenedor {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.gestion-cursos .usuarios-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.gestion-cursos .usuarios-tabla th {
+  background-color: #f8fafc;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 12px 14px;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.gestion-cursos .usuarios-tabla tbody tr {
+  background-color: #ffffff;
+  transition: background-color 0.15s ease;
+}
+
+.gestion-cursos .usuarios-tabla tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.gestion-cursos .usuarios-tabla td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.gestion-cursos .usuarios-tabla td strong {
+  color: #0f172a;
+}
+
+/* 12. Estados como Pills */
+.gestion-cursos .cursos-pill,
+.gestion-cursos .usuarios-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.gestion-cursos .cursos-pill.pill-activo,
+.gestion-cursos .usuarios-estado.activo {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.gestion-cursos .pill-punto {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.gestion-cursos .cursos-pill.pill-cancelado,
+.gestion-cursos .usuarios-estado.inactivo {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.gestion-cursos .cursos-pill.pill-ambar {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.gestion-cursos .cursos-pill.pill-gris {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+/* 13. Botones de acción pequeños y cuadrados con borde */
+.gestion-cursos .usuarios-acciones {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.gestion-cursos .usuarios-acciones button {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.gestion-cursos .usuarios-acciones button:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.gestion-cursos .usuarios-acciones button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 14. Barra de progreso de cupos clara */
+.gestion-cursos .cursos-cupos-porcentaje {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.gestion-cursos .cursos-barra-cupos-track {
+  background-color: #e2e8f0;
+  border-radius: 9999px;
+  height: 6px;
+  width: 100%;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.gestion-cursos .cursos-barra-cupos-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.gestion-cursos .cursos-barra-cupos-fill.fill-agotado {
+  background-color: #ef4444;
+}
+
+.gestion-cursos .cursos-barra-cupos-fill.fill-ultimos {
+  background-color: #f59e0b;
+}
+
+.gestion-cursos .cursos-barra-cupos-fill.fill-disponible {
+  background-color: #10b981;
+}
+
+/* 15. Mensajes de éxito y error */
+.gestion-cursos .usuarios-exito,
+.gestion-cursos .cursos-alerta-exito {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  margin: 12px 0;
+}
+
+.gestion-cursos .usuarios-error,
+.gestion-cursos .cursos-alerta-error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  margin: 12px 0;
+}
+
+.gestion-cursos .usuarios-vacio {
+  padding: 32px 16px;
+  color: #64748b;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* 16. MODALES */
+.gestion-cursos .usuarios-modal-fondo,
+.usuarios-modal-fondo.gestion-cursos {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.gestion-cursos .usuarios-modal,
+.usuarios-modal-fondo.gestion-cursos .usuarios-modal {
+  position: relative;
+  width: 100%;
+  max-width: 760px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  color: #0f172a;
+  box-sizing: border-box;
+}
+
+.gestion-cursos .usuarios-modal-cerrar,
+.usuarios-modal-fondo.gestion-cursos .usuarios-modal-cerrar {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.gestion-cursos .usuarios-modal-cerrar:hover,
+.usuarios-modal-fondo.gestion-cursos .usuarios-modal-cerrar:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.gestion-cursos .cursos-modal-cabecera {
+  margin-bottom: 12px;
+}
+
+.gestion-cursos .cursos-modal-cabecera h3,
+.gestion-cursos .usuarios-formulario h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 4px 0 2px 0;
+}
+
+.gestion-cursos .cursos-modal-cabecera p,
+.gestion-cursos .usuarios-formulario p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.gestion-cursos .cursos-modal-separador {
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 16px 0 20px 0;
+}
+
+/* Grilla de formularios en 2 columnas (1 en móvil <640px) */
+.gestion-cursos .cursos-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.gestion-cursos .cursos-form-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gestion-cursos .cursos-col-span-2 {
+  grid-column: span 2;
+}
+
+@media (max-width: 640px) {
+  .gestion-cursos .cursos-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .gestion-cursos .cursos-col-span-2 {
+    grid-column: span 1;
+  }
+}
+
+/* Listas de prerrequisitos / cursos aprobados */
+.gestion-cursos .cursos-lista-seleccion {
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background-color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gestion-cursos .cursos-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: normal;
+  color: #334155;
+}
+
+.gestion-cursos .cursos-checkbox-item input[type="checkbox"] {
+  width: auto;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+/* Pie del modal */
+.gestion-cursos .usuarios-formulario-acciones,
+.gestion-cursos .cursos-modal-pie {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.gestion-cursos .usuarios-formulario-acciones button[type="button"],
+.gestion-cursos .usuarios-formulario-acciones button.cursos-btn-secundario {
+  background-color: #ffffff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.gestion-cursos .usuarios-formulario-acciones button[type="button"]:hover,
+.gestion-cursos .usuarios-formulario-acciones button.cursos-btn-secundario:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.gestion-cursos .usuarios-formulario-acciones button[type="submit"],
+.gestion-cursos .usuarios-formulario-acciones button.cursos-btn-principal {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.gestion-cursos .usuarios-formulario-acciones button[type="submit"]:hover,
+.gestion-cursos .usuarios-formulario-acciones button.cursos-btn-principal:hover {
+  background-color: #1d4ed8;
+}
+
+.gestion-cursos .cursos-btn-peligro {
+  background-color: #dc2626 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 10px 20px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.gestion-cursos .cursos-btn-peligro:hover {
+  background-color: #b91c1c !important;
+}
+
+/* Modal Detalle */
+.gestion-cursos .cursos-detalle-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  font-size: 14px;
+}
+
+.gestion-cursos .cursos-detalle-label {
+  color: #64748b;
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.gestion-cursos .cursos-detalle-seccion {
+  margin-top: 12px;
+}
+
+.gestion-cursos .cursos-detalle-texto {
+  margin: 4px 0;
+  color: #0f172a;
+  font-size: 14px;
+}
+
+.gestion-cursos .cursos-alerta-cancelacion {
+  margin-top: 14px;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.gestion-cursos .cursos-alerta-cancelacion strong {
+  color: #991b1b;
+}
+
+.gestion-cursos .cursos-alerta-cancelacion p {
+  color: #b91c1c;
+  margin: 4px 0;
+}
