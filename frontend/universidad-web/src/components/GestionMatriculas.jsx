@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import {
   Plus,
-  Search,
   RefreshCw,
   ClipboardList,
   CircleCheck,
@@ -11,16 +10,21 @@ import {
 } from "lucide-react";
 
 import {
+  obtenerEstudiantes,
+  obtenerCursos,
   obtenerMatriculasPorEstudiante,
   registrarMatricula,
   anularMatricula,
 } from "../services/api";
 
+import SelectorBuscable from "./SelectorBuscable";
 import "./GestionUsuarios.css";
 
 const FORMULARIO_VACIO = { estudianteId: "", cursoId: "", periodo: "2026-II" };
 
 export default function GestionMatriculas({ token }) {
+  const [estudiantes, setEstudiantes] = useState([]);
+  const [cursos, setCursos] = useState([]);
   const [estudianteId, setEstudianteId] = useState("");
   const [estudianteBuscado, setEstudianteBuscado] = useState(null);
   const [matriculas, setMatriculas] = useState([]);
@@ -31,9 +35,80 @@ export default function GestionMatriculas({ token }) {
   const [modalAbierto, setModalAbierto] = useState(false);
   const [formulario, setFormulario] = useState(FORMULARIO_VACIO);
 
+  useEffect(() => {
+    let activo = true;
+
+    async function cargarDatosIniciales() {
+      try {
+        const [datosEstudiantes, datosCursos] = await Promise.all([
+          obtenerEstudiantes(token),
+          obtenerCursos(token),
+        ]);
+        if (activo) {
+          setEstudiantes(
+            Array.isArray(datosEstudiantes) ? datosEstudiantes : []
+          );
+          setCursos(Array.isArray(datosCursos) ? datosCursos : []);
+        }
+      } catch (err) {
+        if (activo) {
+          setError(err.message);
+        }
+      }
+    }
+
+    cargarDatosIniciales();
+
+    return () => {
+      activo = false;
+    };
+  }, [token]);
+
+  const opcionesEstudiantesActivos = useMemo(() => {
+    return estudiantes
+      .filter((e) => e.activo === true)
+      .map((e) => ({
+        valor: String(e.id),
+        titulo: `${e.nombres} ${e.apellidos}`,
+        detalle: `ID ${e.id} · ${e.codigo} · DNI ${e.dni} · ${e.carrera}`,
+      }));
+  }, [estudiantes]);
+
+  const opcionesTodosEstudiantes = useMemo(() => {
+    return estudiantes.map((e) => ({
+      valor: String(e.id),
+      titulo: `${e.nombres} ${e.apellidos}`,
+      detalle: `ID ${e.id} · ${e.codigo} · DNI ${e.dni} · ${e.carrera}${
+        e.activo === false ? " · INACTIVO" : ""
+      }`,
+    }));
+  }, [estudiantes]);
+
+  const opcionesCursosDisponibles = useMemo(() => {
+    return cursos
+      .filter(
+        (c) =>
+          c.activo === true &&
+          c.estado === "ACTIVO" &&
+          c.cuposDisponibles > 0
+      )
+      .map((c) => ({
+        valor: String(c.id),
+        titulo: `${c.codigo} - ${c.nombre}`,
+        detalle: `ID ${c.id} · Ciclo ${c.ciclo} · ${c.cuposDisponibles}/${c.cuposTotales} cupos`,
+      }));
+  }, [cursos]);
+
+  function obtenerNombreCurso(cursoId) {
+    const curso = cursos.find((c) => String(c.id) === String(cursoId));
+    return curso ? `${curso.codigo} - ${curso.nombre}` : cursoId;
+  }
+
+  const consultaVigente = useRef(null);
+
   async function cargarMatriculas(id) {
     if (!id) {
-      setError("Ingresa el ID del estudiante.");
+      setError("Selecciona un estudiante.");
       return;
     }
 
@@ -41,8 +116,10 @@ export default function GestionMatriculas({ token }) {
     setError("");
 
     try {
+      consultaVigente.current = id;
       const datos = await obtenerMatriculasPorEstudiante(token, id);
-      setMatriculas(datos);
+      if (consultaVigente.current !== id) return; // llegó la respuesta de un estudiante anterior
+      setMatriculas(Array.isArray(datos) ? datos : []);
       setEstudianteBuscado(id);
     } catch (err) {
       setError(err.message);
@@ -52,14 +129,11 @@ export default function GestionMatriculas({ token }) {
     }
   }
 
-  function buscar(evento) {
-    evento.preventDefault();
-    setMensaje("");
-    cargarMatriculas(estudianteId.trim());
-  }
-
   function abrirModal() {
-    setFormulario({ ...FORMULARIO_VACIO, estudianteId: estudianteBuscado || "" });
+    setFormulario({
+      ...FORMULARIO_VACIO,
+      estudianteId: estudianteBuscado ? String(estudianteBuscado) : "",
+    });
     setError("");
     setMensaje("");
     setModalAbierto(true);
@@ -78,6 +152,12 @@ export default function GestionMatriculas({ token }) {
 
   async function guardarMatricula(evento) {
     evento.preventDefault();
+
+    if (!formulario.estudianteId || !formulario.cursoId) {
+      setError("Selecciona el estudiante y el curso.");
+      return;
+    }
+
     setGuardando(true);
     setError("");
 
@@ -89,6 +169,7 @@ export default function GestionMatriculas({ token }) {
       };
 
       await registrarMatricula(token, datos);
+      obtenerCursos(token).then(setCursos).catch(() => {}); // refresca cupos
 
       setMensaje("Matrícula registrada correctamente.");
       setModalAbierto(false);
@@ -113,6 +194,7 @@ export default function GestionMatriculas({ token }) {
 
     try {
       await anularMatricula(token, matricula.id);
+      obtenerCursos(token).then(setCursos).catch(() => {}); // refresca cupos
       setMensaje("Matrícula anulada correctamente.");
       await cargarMatriculas(estudianteBuscado);
     } catch (err) {
@@ -159,26 +241,26 @@ export default function GestionMatriculas({ token }) {
       </div>
 
       <div className="usuarios-panel">
-        <form className="usuarios-herramientas" onSubmit={buscar}>
-          <div className="usuarios-busqueda">
-            <Search size={19} />
-            <input
-              type="number"
-              min="1"
-              placeholder="ID del estudiante (ej. 1)"
-              value={estudianteId}
-              onChange={(e) => setEstudianteId(e.target.value)}
+        <div className="usuarios-herramientas">
+          <div style={{ flex: 1, maxWidth: "460px" }}>
+            <SelectorBuscable
+              id="consulta-estudiante"
+              opciones={opcionesTodosEstudiantes}
+              valor={estudianteId}
+              onChange={(nuevoId) => {
+                setEstudianteId(nuevoId);
+                if (nuevoId) {
+                  cargarMatriculas(nuevoId);
+                } else {
+                  setMatriculas([]);
+                  setEstudianteBuscado(null);
+                }
+              }}
+              placeholder="Buscar estudiante por nombre, código o DNI..."
+              vacio="No se encontraron estudiantes"
+              deshabilitado={cargando}
             />
           </div>
-
-          <button
-            type="submit"
-            className="usuarios-boton-secundario"
-            disabled={cargando}
-          >
-            <Search size={18} />
-            Buscar
-          </button>
 
           <button
             type="button"
@@ -189,7 +271,7 @@ export default function GestionMatriculas({ token }) {
             <RefreshCw size={18} />
             Actualizar
           </button>
-        </form>
+        </div>
 
         {mensaje && (
           <p className="usuarios-exito" role="status">
@@ -227,10 +309,12 @@ export default function GestionMatriculas({ token }) {
                 {matriculas.map((matricula) => (
                   <tr key={matricula.id}>
                     <td>{matricula.id}</td>
-                    <td>{matricula.cursoId}</td>
+                    <td>{obtenerNombreCurso(matricula.cursoId)}</td>
                     <td>{matricula.periodo}</td>
                     <td>
-                      {new Date(matricula.fechaMatricula).toLocaleString("es-PE")}
+                      {new Date(matricula.fechaMatricula).toLocaleString(
+                        "es-PE"
+                      )}
                     </td>
                     <td>
                       <span
@@ -292,26 +376,36 @@ export default function GestionMatriculas({ token }) {
             <form onSubmit={guardarMatricula} className="usuarios-formulario">
               <h3>Nueva matrícula</h3>
 
-              <label htmlFor="matricula-estudiante">ID del estudiante</label>
-              <input
+              <label htmlFor="matricula-estudiante">Estudiante</label>
+              <SelectorBuscable
                 id="matricula-estudiante"
-                name="estudianteId"
-                type="number"
-                min="1"
-                value={formulario.estudianteId}
-                onChange={cambiarCampo}
-                required
+                opciones={opcionesEstudiantesActivos}
+                valor={formulario.estudianteId}
+                onChange={(nuevoId) =>
+                  setFormulario((anterior) => ({
+                    ...anterior,
+                    estudianteId: nuevoId,
+                  }))
+                }
+                placeholder="Seleccionar estudiante activo..."
+                vacio="No se encontraron estudiantes activos"
+                deshabilitado={guardando}
               />
 
-              <label htmlFor="matricula-curso">ID del curso</label>
-              <input
+              <label htmlFor="matricula-curso">Curso (activos con cupo)</label>
+              <SelectorBuscable
                 id="matricula-curso"
-                name="cursoId"
-                type="number"
-                min="1"
-                value={formulario.cursoId}
-                onChange={cambiarCampo}
-                required
+                opciones={opcionesCursosDisponibles}
+                valor={formulario.cursoId}
+                onChange={(nuevoId) =>
+                  setFormulario((anterior) => ({
+                    ...anterior,
+                    cursoId: nuevoId,
+                  }))
+                }
+                placeholder="Seleccionar curso activo..."
+                vacio="No se encontraron cursos activos con cupos disponibles"
+                deshabilitado={guardando}
               />
 
               <label htmlFor="matricula-periodo">Periodo</label>
@@ -332,7 +426,11 @@ export default function GestionMatriculas({ token }) {
               )}
 
               <div className="usuarios-formulario-acciones">
-                <button type="button" onClick={cerrarModal}>
+                <button
+                  type="button"
+                  onClick={cerrarModal}
+                  disabled={guardando}
+                >
                   Cancelar
                 </button>
                 <button type="submit" disabled={guardando}>
