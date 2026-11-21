@@ -289,7 +289,7 @@ export default function GestionMatriculas({ token }) {
           <p className="usuarios-vacio">Cargando matrículas...</p>
         ) : !estudianteBuscado ? (
           <p className="usuarios-vacio">
-            Ingresa el ID de un estudiante para ver sus matrículas.
+            Selecciona un estudiante para ver sus matrículas.
           </p>
         ) : (
           <div className="usuarios-tabla-contenedor">
