@@ -32,10 +32,10 @@ jobs:
         working-directory: ${{ matrix.servicio }}
     steps:
       - name: Descargar el codigo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Instalar Java 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
@@ -53,10 +53,10 @@ jobs:
         working-directory: frontend/universidad-web
     steps:
       - name: Descargar el codigo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Instalar Node 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '22'
           cache: npm
