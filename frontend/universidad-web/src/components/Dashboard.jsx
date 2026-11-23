@@ -18,6 +18,7 @@ import {
 import GestionUsuarios from "./GestionUsuarios";
 import GestionEstudiantes from "./GestionEstudiantes";
 import GestionMatriculas from "./GestionMatriculas";
+import MisMatriculas from "./MisMatriculas";
 import GestionCursos from "./GestionCursos";
 import "./Dashboard.css";
 
@@ -234,6 +235,8 @@ function Dashboard({ sesion, onCerrarSesion }) {
             <GestionEstudiantes token={sesion.token} />
           ) : seccion === "matriculas" && ["ADMINISTRADOR", "SECRETARIA"].includes(rol) ? (
             <GestionMatriculas token={sesion.token} />
+          ) : seccion === "matriculas" && rol === "ESTUDIANTE" ? (
+            <MisMatriculas token={sesion.token} />
           ) : seccion === "cursos" ? (
             <GestionCursos token={sesion.token} rol={rol} />
           ) : (

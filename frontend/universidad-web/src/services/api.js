@@ -195,6 +195,10 @@ export function obtenerMatriculasPorEstudiante(token, estudianteId) {
   );
 }
 
+export function obtenerMisMatriculas(token) {
+  return solicitudMatricula("/mias", "GET", token);
+}
+
 export function registrarMatricula(token, datos) {
   return solicitudMatricula("", "POST", token, datos);
 }

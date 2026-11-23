@@ -65,4 +65,39 @@ public class EstudianteClient {
                     "El estudiante con id " + estudianteId + " no esta activo");
         }
     }
+
+    public Long obtenerIdPorUsuario(String usuarioId, String authorization) {
+        if (!activa) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
+                    "La consulta al servicio de estudiantes no esta activa");
+        }
+
+        Map<String, Object> estudiante;
+        try {
+            estudiante = restClient.get()
+                    .uri("/api/estudiantes/usuario/{usuarioId}", usuarioId)
+                    .header(HttpHeaders.AUTHORIZATION, authorization)
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<Map<String, Object>>() {});
+
+        } catch (RestClientResponseException ex) {
+            if (ex.getStatusCode().value() == 404) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Tu usuario no esta vinculado a ningun estudiante. "
+                                + "Pide a secretaria que registre tu ficha con este ID de usuario: " + usuarioId);
+            }
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,
+                    "El servicio de estudiantes respondio con error " + ex.getStatusCode().value());
+
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
+                    "El servicio de estudiantes no esta disponible");
+        }
+
+        if (estudiante == null || !(estudiante.get("id") instanceof Number id)) {
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,
+                    "El servicio de estudiantes no devolvio el id");
+        }
+        return id.longValue();
+    }
 }

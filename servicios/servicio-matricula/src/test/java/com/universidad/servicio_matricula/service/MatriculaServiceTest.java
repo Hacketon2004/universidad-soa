@@ -1,5 +1,6 @@
 package com.universidad.servicio_matricula.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -144,5 +145,29 @@ class MatriculaServiceTest {
 
         assertEquals(EstadoMatricula.ACTIVA, activa.getEstado());
         verify(repositorio, never()).save(any());
+    }
+
+    @Test
+    void listarMias_buscaElEstudianteDelUsuario_yDevuelveSusMatriculas() {
+        Matricula propia = new Matricula();
+        when(estudiantes.obtenerIdPorUsuario("u-alumno", TOKEN)).thenReturn(7L);
+        when(repositorio.findByEstudianteId(7L)).thenReturn(List.of(propia));
+
+        List<Matricula> resultado = servicio.listarMias("u-alumno", TOKEN);
+
+        assertEquals(List.of(propia), resultado);
+        verify(repositorio).findByEstudianteId(7L);
+    }
+
+    @Test
+    void listarMias_usuarioSinEstudianteVinculado_da404_yNoConsultaMatriculas() {
+        when(estudiantes.obtenerIdPorUsuario("u-nuevo", TOKEN))
+                .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Sin ficha"));
+
+        ResponseStatusException error = assertThrows(ResponseStatusException.class,
+                () -> servicio.listarMias("u-nuevo", TOKEN));
+
+        assertEquals(HttpStatus.NOT_FOUND, error.getStatusCode());
+        verifyNoInteractions(repositorio);
     }
 }

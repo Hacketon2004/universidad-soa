@@ -73,6 +73,13 @@ public class MatriculaService {
         return matriculaRepository.findByEstudianteId(estudianteId);
     }
 
+
+    // 2b. LISTAR LAS MATRICULAS DEL ESTUDIANTE QUE INICIO SESION
+    public List<Matricula> listarMias(String usuarioId, String authorization) {
+        Long estudianteId = estudianteClient.obtenerIdPorUsuario(usuarioId, authorization);
+        return matriculaRepository.findByEstudianteId(estudianteId);
+    }
+
     // 3. ANULAR
     public Matricula anular(Long id, String authorization) {
         Matricula matricula = matriculaRepository.findById(id)
