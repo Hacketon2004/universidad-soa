@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,6 +49,14 @@ public class MatriculaController {
     @GetMapping("/estudiante/{estudianteId}")
     public List<Matricula> listarPorEstudiante(@PathVariable Long estudianteId) {
         return matriculaService.listarPorEstudiante(estudianteId);
+    }
+
+    // GET /api/matriculas/mias → matriculas del estudiante que inicio sesion
+    @GetMapping("/mias")
+    public List<Matricula> listarMias(
+            Authentication authentication,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
+        return matriculaService.listarMias(authentication.getName(), authorization);
     }
 
     // PUT /api/matriculas/{id}/anular → anular

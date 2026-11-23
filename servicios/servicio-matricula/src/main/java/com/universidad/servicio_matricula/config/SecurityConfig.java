@@ -42,6 +42,11 @@ public class SecurityConfig {
                     "/api/matriculas/estudiante/*"
                 ).hasAnyAuthority("ROLE_ADMINISTRADOR", "ROLE_SECRETARIA")
 
+                                .requestMatchers(
+                    HttpMethod.GET,
+                    "/api/matriculas/mias"
+                ).hasAuthority("ROLE_ESTUDIANTE")
+
                 .anyRequest().denyAll()
             )
             .addFilterAfter(
