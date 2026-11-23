@@ -7,6 +7,8 @@ echo ">> Actualizando codigo"
 git fetch origin main
 git merge --ff-only origin/main
 
+# Sin "provenance": un build sin cambios produce la misma imagen y no reinicia el servicio
+export BUILDX_NO_DEFAULT_ATTESTATIONS=1
 COMPOSE="docker compose -f docker-compose.prod.yml"
 
 for servicio in servicio-autenticacion servicio-estudiante servicio-curso servicio-financiero servicio-matricula api-gateway; do
