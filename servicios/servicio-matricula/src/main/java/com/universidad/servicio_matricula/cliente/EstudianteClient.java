@@ -66,7 +66,22 @@ public class EstudianteClient {
         }
     }
 
+    // Para consultar: devuelve el id de la ficha vinculada al usuario (aunque este inactivo)
     public Long obtenerIdPorUsuario(String usuarioId, String authorization) {
+        return extraerId(consultarPorUsuario(usuarioId, authorization));
+    }
+
+    // Para matricularse: ademas exige que el estudiante este activo
+    public Long obtenerIdActivoPorUsuario(String usuarioId, String authorization) {
+        Map<String, Object> estudiante = consultarPorUsuario(usuarioId, authorization);
+        if (!Boolean.TRUE.equals(estudiante.get("activo"))) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Tu ficha de estudiante no está activa. Comunícate con secretaría.");
+        }
+        return extraerId(estudiante);
+    }
+
+    private Map<String, Object> consultarPorUsuario(String usuarioId, String authorization) {
         if (!activa) {
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
                     "La consulta al servicio de estudiantes no esta activa");
@@ -94,7 +109,15 @@ public class EstudianteClient {
                     "El servicio de estudiantes no esta disponible");
         }
 
-        if (estudiante == null || !(estudiante.get("id") instanceof Number id)) {
+        if (estudiante == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,
+                    "El servicio de estudiantes no devolvio datos");
+        }
+        return estudiante;
+    }
+
+    private Long extraerId(Map<String, Object> estudiante) {
+        if (!(estudiante.get("id") instanceof Number id)) {
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,
                     "El servicio de estudiantes no devolvio el id");
         }

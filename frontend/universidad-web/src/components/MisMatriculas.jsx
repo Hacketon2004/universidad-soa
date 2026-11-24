@@ -1,7 +1,19 @@
-import { useEffect, useState } from "react";
-import { RefreshCw, ClipboardList, CircleCheck, CircleX } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Plus,
+  RefreshCw,
+  ClipboardList,
+  CircleCheck,
+  CircleX,
+  X,
+} from "lucide-react";
 
-import { obtenerMisMatriculas, obtenerCursos } from "../services/api";
+import {
+  obtenerMisMatriculas,
+  obtenerCursos,
+  matricularme,
+} from "../services/api";
+import SelectorBuscable from "./SelectorBuscable";
 import "./GestionUsuarios.css";
 
 export default function MisMatriculas({ token }) {
@@ -9,6 +21,12 @@ export default function MisMatriculas({ token }) {
   const [cursos, setCursos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
+  const [mensaje, setMensaje] = useState("");
+
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const [cursoElegido, setCursoElegido] = useState("");
+  const [guardando, setGuardando] = useState(false);
+  const [errorModal, setErrorModal] = useState("");
 
   async function cargar() {
     setCargando(true);
@@ -37,6 +55,64 @@ export default function MisMatriculas({ token }) {
     return curso ? `${curso.codigo} - ${curso.nombre}` : `Curso ${cursoId}`;
   }
 
+  // Cursos donde se puede matricular: activos, con cupo y donde aun no tiene matricula activa
+  const opcionesCursos = useMemo(() => {
+    const yaMatriculado = new Set(
+      matriculas
+        .filter((m) => m.estado === "ACTIVA")
+        .map((m) => String(m.cursoId))
+    );
+
+    return cursos
+      .filter(
+        (c) =>
+          c.activo === true &&
+          c.estado === "ACTIVO" &&
+          c.cuposDisponibles > 0 &&
+          !yaMatriculado.has(String(c.id))
+      )
+      .map((c) => ({
+        valor: String(c.id),
+        titulo: `${c.codigo} - ${c.nombre}`,
+        detalle: `Ciclo ${c.ciclo} · ${c.creditos} créditos · ${c.cuposDisponibles}/${c.cuposTotales} cupos`,
+      }));
+  }, [cursos, matriculas]);
+
+  function abrirModal() {
+    setCursoElegido("");
+    setErrorModal("");
+    setMensaje("");
+    setModalAbierto(true);
+  }
+
+  function cerrarModal() {
+    if (!guardando) {
+      setModalAbierto(false);
+    }
+  }
+
+  async function confirmarMatricula(evento) {
+    evento.preventDefault();
+
+    if (!cursoElegido) {
+      setErrorModal("Elige un curso.");
+      return;
+    }
+
+    setGuardando(true);
+    setErrorModal("");
+    try {
+      await matricularme(token, Number(cursoElegido));
+      setModalAbierto(false);
+      setMensaje("Te matriculaste correctamente.");
+      await cargar();
+    } catch (err) {
+      setErrorModal(err.message);
+    } finally {
+      setGuardando(false);
+    }
+  }
+
   const activas = matriculas.filter((m) => m.estado === "ACTIVA").length;
   const anuladas = matriculas.filter((m) => m.estado === "ANULADA").length;
 
@@ -46,18 +122,30 @@ export default function MisMatriculas({ token }) {
         <div>
           <span className="usuarios-etiqueta">ACADÉMICO</span>
           <h1>Mis matrículas</h1>
-          <p>Consulta los cursos en los que estás matriculado.</p>
+          <p>Consulta tus cursos y matricúlate en los cursos disponibles.</p>
         </div>
 
-        <button
-          type="button"
-          className="usuarios-boton-secundario"
-          onClick={cargar}
-          disabled={cargando}
-        >
-          <RefreshCw size={18} />
-          Actualizar
-        </button>
+        <div style={{ display: "flex", gap: "12px" }}>
+          <button
+            type="button"
+            className="usuarios-boton-secundario"
+            onClick={cargar}
+            disabled={cargando}
+          >
+            <RefreshCw size={18} />
+            Actualizar
+          </button>
+
+          <button
+            type="button"
+            className="usuarios-boton-principal"
+            onClick={abrirModal}
+            disabled={cargando || Boolean(error)}
+          >
+            <Plus size={18} />
+            Matricularme
+          </button>
+        </div>
       </div>
 
       <div className="usuarios-resumen">
@@ -79,6 +167,12 @@ export default function MisMatriculas({ token }) {
       </div>
 
       <div className="usuarios-panel">
+        {mensaje && (
+          <p className="usuarios-exito" role="status">
+            {mensaje}
+          </p>
+        )}
+
         {error && (
           <p className="usuarios-error" role="alert">
             {error}
@@ -126,6 +220,56 @@ export default function MisMatriculas({ token }) {
           </div>
         ) : null}
       </div>
+
+      {modalAbierto && (
+        <div className="usuarios-modal-fondo">
+          <div
+            className="usuarios-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Matricularme"
+          >
+            <button
+              className="usuarios-modal-cerrar"
+              onClick={cerrarModal}
+              disabled={guardando}
+              aria-label="Cerrar"
+            >
+              <X size={20} />
+            </button>
+
+            <form onSubmit={confirmarMatricula} className="usuarios-formulario">
+              <h3>Matricularme</h3>
+
+              <label htmlFor="mi-curso">Curso (activos con cupo)</label>
+              <SelectorBuscable
+                id="mi-curso"
+                opciones={opcionesCursos}
+                valor={cursoElegido}
+                onChange={setCursoElegido}
+                placeholder="Buscar curso por código o nombre..."
+                vacio="No hay cursos disponibles para ti en este momento"
+                deshabilitado={guardando}
+              />
+
+              {errorModal && (
+                <p className="usuarios-error" role="alert">
+                  {errorModal}
+                </p>
+              )}
+
+              <div className="usuarios-formulario-acciones">
+                <button type="button" onClick={cerrarModal} disabled={guardando}>
+                  Cancelar
+                </button>
+                <button type="submit" disabled={guardando}>
+                  {guardando ? "Matriculando..." : "Confirmar matrícula"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
