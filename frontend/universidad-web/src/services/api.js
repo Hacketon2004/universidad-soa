@@ -199,6 +199,10 @@ export function obtenerMisMatriculas(token) {
   return solicitudMatricula("/mias", "GET", token);
 }
 
+export function matricularme(token, cursoId) {
+  return solicitudMatricula("/mias", "POST", token, { cursoId });
+}
+
 export function registrarMatricula(token, datos) {
   return solicitudMatricula("", "POST", token, datos);
 }

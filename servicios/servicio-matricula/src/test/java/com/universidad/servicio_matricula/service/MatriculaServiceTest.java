@@ -170,4 +170,46 @@ class MatriculaServiceTest {
         assertEquals(HttpStatus.NOT_FOUND, error.getStatusCode());
         verifyNoInteractions(repositorio);
     }
+
+
+    @Test
+    void registrarMia_usaLaFichaDelToken_reservaCupo_yGuarda_sinConsultarPorId() {
+        when(estudiantes.obtenerIdActivoPorUsuario("u-alumno", TOKEN)).thenReturn(7L);
+        when(repositorio.findByEstudianteIdAndCursoIdAndPeriodo(7L, 101L, "2026-II")).thenReturn(Optional.empty());
+
+        Matricula resultado = servicio.registrarMia("u-alumno", 101L, "2026-II", TOKEN);
+
+        assertEquals(7L, resultado.getEstudianteId());
+        InOrder orden = inOrder(estudiantes, cursos, repositorio);
+        orden.verify(estudiantes).obtenerIdActivoPorUsuario("u-alumno", TOKEN);
+        orden.verify(cursos).reservarCupo(101L, TOKEN);
+        orden.verify(repositorio).save(any(Matricula.class));
+        verify(estudiantes, never()).verificarEstudianteActivo(any(), any());
+    }
+
+    @Test
+    void registrarMia_duplicada_da409_yNoReservaCupo() {
+        Matricula activa = new Matricula();
+        activa.setEstado(EstadoMatricula.ACTIVA);
+        when(estudiantes.obtenerIdActivoPorUsuario("u-alumno", TOKEN)).thenReturn(7L);
+        when(repositorio.findByEstudianteIdAndCursoIdAndPeriodo(7L, 101L, "2026-II")).thenReturn(Optional.of(activa));
+
+        ResponseStatusException error = assertThrows(ResponseStatusException.class,
+                () -> servicio.registrarMia("u-alumno", 101L, "2026-II", TOKEN));
+
+        assertEquals(HttpStatus.CONFLICT, error.getStatusCode());
+        verifyNoInteractions(cursos);
+    }
+
+    @Test
+    void registrarMia_estudianteInactivo_noReservaCupo() {
+        when(estudiantes.obtenerIdActivoPorUsuario("u-alumno", TOKEN))
+                .thenThrow(new ResponseStatusException(HttpStatus.CONFLICT, "Ficha inactiva"));
+
+        assertThrows(ResponseStatusException.class,
+                () -> servicio.registrarMia("u-alumno", 101L, "2026-II", TOKEN));
+
+        verifyNoInteractions(cursos);
+        verify(repositorio, never()).save(any());
+    }
 }

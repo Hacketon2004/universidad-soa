@@ -29,20 +29,43 @@ public class MatriculaService {
         this.cursoClient = cursoClient;
     }
 
-    // 1. REGISTRAR
+    // 1. REGISTRAR (secretaria o administrador elige al estudiante)
     public Matricula registrar(Long estudianteId, Long cursoId, String periodo, String authorization) {
-        Optional<Matricula> existente =
-                matriculaRepository.findByEstudianteIdAndCursoIdAndPeriodo(estudianteId, cursoId, periodo);
-
         // a) Regla local: no matricular dos veces (no hace falta preguntar a nadie)
-        if (existente.isPresent() && existente.get().getEstado() == EstadoMatricula.ACTIVA) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "El estudiante ya está matriculado en este curso para el periodo " + periodo);
-        }
+        Optional<Matricula> existente = validarQueNoEsteDuplicada(estudianteId, cursoId, periodo);
 
         // b) Servicio de estudiantes: ¿existe y está activo?
         estudianteClient.verificarEstudianteActivo(estudianteId, authorization);
 
+        // c) y d) Reservar cupo y guardar
+        return reservarCupoYGuardar(existente, estudianteId, cursoId, periodo, authorization);
+    }
+
+    // 1b. AUTOMATRICULA (el estudiante se matricula a si mismo)
+    public Matricula registrarMia(String usuarioId, Long cursoId, String periodo, String authorization) {
+        // a) Su ficha sale del token: no puede matricular a otro. Ademas debe estar activo
+        Long estudianteId = estudianteClient.obtenerIdActivoPorUsuario(usuarioId, authorization);
+
+        // b) Regla local: no matricularse dos veces
+        Optional<Matricula> existente = validarQueNoEsteDuplicada(estudianteId, cursoId, periodo);
+
+        // c) y d) Reservar cupo y guardar
+        return reservarCupoYGuardar(existente, estudianteId, cursoId, periodo, authorization);
+    }
+
+    private Optional<Matricula> validarQueNoEsteDuplicada(Long estudianteId, Long cursoId, String periodo) {
+        Optional<Matricula> existente =
+                matriculaRepository.findByEstudianteIdAndCursoIdAndPeriodo(estudianteId, cursoId, periodo);
+
+        if (existente.isPresent() && existente.get().getEstado() == EstadoMatricula.ACTIVA) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "El estudiante ya está matriculado en este curso para el periodo " + periodo);
+        }
+        return existente;
+    }
+
+    private Matricula reservarCupoYGuardar(Optional<Matricula> existente, Long estudianteId,
+                                           Long cursoId, String periodo, String authorization) {
         // c) Servicio de cursos: ¿existe, está activo y tiene cupo? (descuenta 1)
         cursoClient.reservarCupo(cursoId, authorization);
 
@@ -67,6 +90,7 @@ public class MatriculaService {
             throw ex;
         }
     }
+
 
     // 2. LISTAR
     public List<Matricula> listarPorEstudiante(Long estudianteId) {
